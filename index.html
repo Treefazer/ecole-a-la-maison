@@ -255,6 +255,13 @@ td.nw{white-space:nowrap}
 .nrow{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:5px 0;border-top:1px dashed #D6E4E6;flex-wrap:wrap}
 .nrow span{min-width:0;flex:1}
 .nrow button{font-size:.8rem;padding:6px 9px}
+.chip{display:inline-block;font-size:.8rem;font-weight:800;background:#EEF9F8;border:2px solid var(--lagon);border-radius:20px;padding:1px 10px;vertical-align:middle;margin-left:6px}
+.plist{display:grid;gap:6px;margin:8px 0}
+.prow{display:flex;align-items:center;justify-content:space-between;gap:8px;border:2px solid #D6E4E6;border-radius:12px;padding:8px 12px;flex-wrap:wrap}
+.prow.actif{border-color:var(--lagon);background:#EEF9F8}
+.pact{display:flex;gap:6px;flex-wrap:wrap}
+ol.etapes{padding-left:20px;line-height:1.5}
+dialog#boite select{font:inherit;padding:6px;border:2px solid #C7DADD;border-radius:8px;background:#fff;color:var(--ocean)}
 @media (max-width:520px){.barre{position:static}.onglets button{font-size:.68rem}.srow{flex-direction:column;gap:4px}.sjour{width:auto;display:flex;gap:8px;align-items:baseline}.bloc{flex-direction:column;gap:4px}.bloc .heure{flex-direction:row;width:auto;gap:8px;align-items:baseline}.lagon{height:260px}.items.c2{grid-template-columns:1fr}.fiche{padding:16px 12px}.groupe button{font-size:.85rem;padding:8px 6px}}
 @media print{
   .barre,.outils,.panneau,.note.parent,#viewer,#boite,.hors,.exo[hidden],.bilan,.retour,.score,.toast,.fete,.sesbar,.intro,.bact button,.bact .mini,.jopts,.programmer,.guidage,.chemin,.chprog,[hidden]{display:none!important}
@@ -278,6 +285,8 @@ td.nw{white-space:nowrap}
     <button id="btnMenu" class="ico" aria-expanded="false" aria-controls="menuPlus" aria-label="Plus d'options">☰</button>
   </div>
   <div id="menuPlus" class="actions second" hidden>
+    <button id="btnEnfants" class="clair">👧 Enfants</button>
+    <button id="btnSync" class="clair">🔄 Synchronisation</button>
     <button id="chronoSeance" class="clair">⏱ Chrono séance</button>
     <button id="btnSuivi" class="clair">📈 Suivi et export</button>
     <button id="btnGuide" class="clair">👤 Guide du parent</button>
@@ -976,10 +985,17 @@ const POOL={
 let ENV_ART=!!(window.claude&&typeof window.claude.use==="function");
 const LSK="ecoleMaison";
 const vide=()=>({suivi:{res:{},flu:[],seances:[]},reg:{},intro:false,jours:{},plans:{},ov:{},sem:{},maj:0});
-function lsGet(){try{const v=localStorage.getItem(LSK);return v?JSON.parse(v):null;}catch(e){return null;}}
-function lsSet(o){try{localStorage.setItem(LSK,JSON.stringify(o));}catch(e){}}
+let PROFILS=(()=>{try{return JSON.parse(localStorage.getItem("ecoleProfils")||"null");}catch(e){return null;}})()||{actif:"p1",liste:[{id:"p1",prenom:""}],suppr:[],maj:0};
+PROFILS.suppr=PROFILS.suppr||[];if(!PROFILS.liste.length)PROFILS.liste=[{id:PROFILS.actif,prenom:""}];
+if(!PROFILS.liste.some(p=>p.id===PROFILS.actif))PROFILS.actif=PROFILS.liste[0].id;
+const cleProfil=id=>id==="p1"?LSK:LSK+":"+id;
+const fichierProfil=id=>id==="p1"?"progres":"progres-"+id;
+function sauverProfils(){try{localStorage.setItem("ecoleProfils",JSON.stringify(PROFILS));}catch(e){}}
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+function lsGet(){try{const v=localStorage.getItem(cleProfil(PROFILS.actif));return v?JSON.parse(v):null;}catch(e){return null;}}
+function lsSet(o){try{localStorage.setItem(cleProfil(PROFILS.actif),JSON.stringify(o));}catch(e){}}
 let STORE=Object.assign(vide(),lsGet()||{});
-try{const old=JSON.parse(localStorage.getItem("fichesSuivi")||"null");if(old&&old.res&&!STORE.maj)STORE.suivi=Object.assign(STORE.suivi,old);}catch(e){}
+try{const old=PROFILS.actif==="p1"?JSON.parse(localStorage.getItem("fichesSuivi")||"null"):null;if(old&&old.res&&!STORE.maj)STORE.suivi=Object.assign(STORE.suivi,old);}catch(e){}
 let SUIVI=STORE.suivi;
 let REG=Object.assign({dur:15,lim:6,adapt:true,trad:false,debut:"08:00",aprem:true,niveau:1},STORE.reg);STORE.reg=REG;
 STORE.ov=STORE.ov||{};STORE.sem=STORE.sem||{};
@@ -987,11 +1003,13 @@ if(!REG.semType){const d=REG.debut||"08:00",j=REG.aprem===false?"matin":"complet
 TRAD=REG.trad;
 let DIST=null,ecrEnCours=false,ecrAttente=false,ecrTimer=null;
 function nettoyer(){const lim=Date.now()-40*864e5;for(const o of [STORE.jours,STORE.plans,STORE.ov,STORE.sem])for(const k in o)if(new Date(k+"T12:00").getTime()<lim)delete o[k];}
-function sauver(){STORE.suivi=SUIVI;STORE.reg=REG;STORE.maj=Date.now();nettoyer();lsSet(STORE);if(DIST){clearTimeout(ecrTimer);ecrTimer=setTimeout(ecrire,1500);}}
+function sauver(){STORE.suivi=SUIVI;STORE.reg=REG;STORE.maj=Date.now();nettoyer();lsSet(STORE);if(DIST){clearTimeout(ecrTimer);ecrTimer=setTimeout(ecrire,1500);}
+  const p=PROFILS.liste.find(x=>x.id===PROFILS.actif);if(p&&p.prenom!==(REG.prenom||"")){p.prenom=REG.prenom||"";PROFILS.maj=Date.now();sauverProfils();profilsModifies();}
+  if(typeof syncPlanifier==="function")syncPlanifier();}
 async function ecrire(){if(!DIST)return;if(ecrEnCours){ecrAttente=true;return;}ecrEnCours=true;
   try{await DIST.set(JSON.parse(JSON.stringify(STORE)));etatSync("compte");}catch(e){etatSync("appareil");}
   ecrEnCours=false;if(ecrAttente){ecrAttente=false;ecrire();}}
-function etatSync(o){const z=document.getElementById("sync");if(z)z.textContent=o==="compte"?"☁️ Progrès synchronisés sur ton compte (téléphone et PC)":"💾 Progrès enregistrés sur cet appareil";}
+function etatSync(o){if(o==="appareil"&&typeof syncActif==="function"&&syncActif())return;const z=document.getElementById("sync");if(z)z.textContent=o==="compte"?"☁️ Progrès synchronisés sur ton compte (téléphone et PC)":"💾 Progrès enregistrés sur cet appareil";}
 function adopter(d){STORE=Object.assign(vide(),JSON.parse(JSON.stringify(d)));SUIVI=STORE.suivi;REG=Object.assign(REG,STORE.reg);STORE.reg=REG;TRAD=REG.trad;lsSet(STORE);rafraichirTout();}
 async function brancherStockage(essai=0){
   ENV_ART=!!(window.claude&&typeof window.claude.use==="function");
@@ -999,7 +1017,7 @@ async function brancherStockage(essai=0){
   document.getElementById("impr").textContent="📥 Fiche à imprimer";
   try{
     const db=await window.claude.use("db");if(!db)return;
-    const ref=db.doc("ecole/progres");const s=await ref.get();
+    const ref=db.doc("ecole/"+fichierProfil(PROFILS.actif));const s=await ref.get();brancherProfilsArt(db);
     DIST=ref;etatSync("compte");
     if(s.exists){const d=s.data();if(d&&(d.maj||0)>(STORE.maj||0)){adopter(d);}else if((STORE.maj||0)>(d&&d.maj||0))ecrire();}
     else if((STORE.maj||0)>0)ecrire();
@@ -1354,7 +1372,7 @@ function selType(id,c){return `<select id="${id}" aria-label="Type de journée">
 function selHeure(id,c){const v=debutJour(c),l=HEURES.includes(v)?HEURES:[...HEURES,v].sort();return `<select id="${id}" aria-label="Heure de début">${l.map(x=>`<option value="${x}" ${x===v?"selected":""}>${hmin(enMin(x))}</option>`).join("")}</select>`;}
 function renderJournee(){
   const a=auj(),c=JOUR_VU||a,estAuj=c===a,d=jourDe(c),w=d.getDay(),j=jourEtat(c),type=typeJour(c),plan=STORE.plans[c];
-  let h=`<div class="entete"><h2>📅 ${MAJ(JOURS[w])} ${d.getDate()} ${MOIS[d.getMonth()]}</h2><div class="champs jopts">${selType("jtype",c)} ${type!=="off"?`<label for="jdebut">Début</label> ${selHeure("jdebut",c)}`:""}</div></div>`;
+  let h=`<div class="entete"><h2>📅 ${MAJ(JOURS[w])} ${d.getDate()} ${MOIS[d.getMonth()]}${chipEnfant()}</h2><div class="champs jopts">${selType("jtype",c)} ${type!=="off"?`<label for="jdebut">Début</label> ${selHeure("jdebut",c)}`:""}</div></div>`;
   if(!estAuj)h+=`<div class="apercu"><span>👀 ${c<a?"Journée passée.":"Aperçu. Le jour même, appuie sur « Programmer ma journée » : les niveaux seront ajustés à ses derniers bilans."}</span><button class="o-btn" data-retour="1">← Aujourd'hui</button><button class="o-btn" data-ong="semaine">📆 Ma semaine</button></div>`;
   if(type==="off"){
     h+=`<div class="note"><p><b>${w===0||w===6?"C'est le week-end : pas d'école.":"Pas d'école prévue ce jour-là."}</b></p><p>Juste du plaisir : une histoire le soir, un jeu de société, une sortie dehors. Les enfants apprennent aussi en jouant, en cuisinant, en se promenant.</p><p>Vous avez finalement un peu de temps ? Choisis « ⏱ Courte (1 h) » en haut.</p></div>`;
@@ -1427,7 +1445,7 @@ function renderSemaine(){
   const titre=deb.getMonth()===fin.getMonth()?`du ${deb.getDate()} au ${fin.getDate()} ${MOIS[fin.getMonth()]}`:`du ${deb.getDate()} ${MOIS[deb.getMonth()]} au ${fin.getDate()} ${MOIS[fin.getMonth()]}`;
   const travail=dates.filter(c=>typeJour(c)!=="off"),totMin=travail.reduce((s,c)=>s+minutesTravail(c),0);
   const passes=travail.filter(c=>c<=a),faits=passes.filter(c=>seancesDu(c).length||jourEtat(c).fait.fr||jourEtat(c).fait.maths);
-  let h=`<div class="entete"><h2>📆 Semaine ${titre}</h2><div class="champs semnav"><button class="o-btn" data-sem="-1" aria-label="Semaine précédente">←</button>${ecart?`<button class="o-btn" data-sem="0">Cette semaine</button>`:""}<button class="o-btn" data-sem="1" aria-label="Semaine suivante">→</button></div></div>`;
+  let h=`<div class="entete"><h2>📆 Semaine ${titre}${chipEnfant()}</h2><div class="champs semnav"><button class="o-btn" data-sem="-1" aria-label="Semaine précédente">←</button>${ecart?`<button class="o-btn" data-sem="0">Cette semaine</button>`:""}<button class="o-btn" data-sem="1" aria-label="Semaine suivante">→</button></div></div>`;
   h+=`<p class="sresume"><b>${travail.length} jour${travail.length>1?"s":""} d'école</b> · environ ${duree(totMin)} d'activités · niveau ${nomNiveau(niveau)}${passes.length?` · <b>${faits.length} / ${passes.length}</b> jour${passes.length>1?"s":""} fait${faits.length>1?"s":""} pour l'instant`:""}</p>`;
   const futur=dates.some(c=>c>=a&&typeJour(c)!=="off");
   h+=`<div class="semact">${futur?`<button id="btnProgSem" class="${sem?"o-btn":"gros"}">${sem?"🔄 Reprogrammer la semaine":"🗓 Programmer la semaine"}</button>`:""}<button id="btnSemType" class="o-btn">⭐ Garder comme semaine type</button><button id="btnSemReset" class="o-btn cache">↩ Revenir à la semaine type</button></div>`;
@@ -1706,7 +1724,7 @@ function statutNotion(m,k){
 let FILTRE_N="tout";
 function renderNotions(){
   const ms=FILTRE_N==="tout"?["maths","fr"]:[FILTRE_N];
-  let h=`<div class="entete"><h2>🎯 Notions à travailler</h2><div class="champs semnav">${[["tout","Tout"],["maths","🔢 Maths"],["fr","📖 Français"]].map(([v,t])=>`<button class="o-btn" data-filtre="${v}" aria-pressed="${FILTRE_N===v}">${t}</button>`).join("")}</div></div>`;
+  let h=`<div class="entete"><h2>🎯 Notions à travailler${chipEnfant()}</h2><div class="champs semnav">${[["tout","Tout"],["maths","🔢 Maths"],["fr","📖 Français"]].map(([v,t])=>`<button class="o-btn" data-filtre="${v}" aria-pressed="${FILTRE_N===v}">${t}</button>`).join("")}</div></div>`;
   h+=`<p class="sresume">Niveau ${nomNiveau(niveau)} · d'après les bilans des exercices, de l'écriture sur papier et des jeux en ligne (🎮).</p>`;
   h+=`<div class="nresume">${["maths","fr"].map(m=>{const ks=FICHES[m][niveau],c={ret:0,cours:0,nv:0,acq:0};ks.forEach(k=>c[statutNotion(m,k)]++);
     return `<div><b>${m==="maths"?"🔢 Maths":"📖 Français"}</b> · ${c.acq} / ${ks.length} acquises<span class="sprog large"><i style="width:${c.acq/ks.length*100}%"></i></span><small>🔴 ${c.ret} à retravailler · 🟠 ${c.cours} en cours · ⚪ ${c.nv} pas encore vues</small></div>`;}).join("")}</div>`;
@@ -1745,7 +1763,202 @@ document.getElementById("menuPlus").addEventListener("click",ev=>{if(ev.target.c
 document.getElementById("btnCacher").onclick=()=>{REG.barreCachee=true;sauver();majBarreVisible();toast("La barre est cachée. Le bouton ☰ en haut à droite la fait revenir.");};
 document.getElementById("btnMontrer").onclick=()=>{REG.barreCachee=false;sauver();majBarreVisible();};
 
-majBoutons();afficherIntro();generer();setOnglet("jour");verifJournee(true);etatSync("appareil");majCompteur();brancherStockage();majBarreVisible();setTimeout(verifRetourJeu,800);
+/* ================= SYNCHRONISATION ENTRE APPAREILS (dépôt GitHub privé) ================= */
+const SYNC_K="ecoleSync";
+let SYNC=(()=>{try{return JSON.parse(localStorage.getItem(SYNC_K)||"null")||{};}catch(e){return {};}})();
+let syncTimer=null,syncEnCours=false,syncRelance=false,syncSha=null;
+const syncActif=()=>!ENV_ART&&!!(SYNC.token&&SYNC.depot);
+function syncSauverReglages(){try{localStorage.setItem(SYNC_K,JSON.stringify(SYNC));}catch(e){}}
+const b64e=s=>btoa(unescape(encodeURIComponent(s)));
+const b64d=s=>decodeURIComponent(escape(atob(s.replace(/\s/g,""))));
+const syncUrl=f=>`https://api.github.com/repos/${SYNC.depot}/contents/${f}.json`;
+const syncHdr=()=>({"Authorization":"Bearer "+SYNC.token,"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"});
+function syncEtat(txt,ok){SYNC.etat=txt;SYNC.ok=!!ok;if(ok)SYNC.der=Date.now();syncSauverReglages();
+  const z=document.getElementById("sync");if(z)z.textContent=txt;const d=document.getElementById("syncEtat");if(d)d.textContent=txt;}
+
+/* Fusion de deux sauvegardes : rien ne se perd si les deux appareils ont servi */
+function fusion(a,b){
+  if(!a||!a.suivi)return b;if(!b||!b.suivi)return a;
+  const rec=(a.maj||0)>=(b.maj||0)?a:b,anc=rec===a?b:a;
+  const r=JSON.parse(JSON.stringify(rec));
+  const uni=(x,y,cle,lim)=>{const m=new Map();[...(y||[]),...(x||[])].forEach(e=>{const k=cle(e);const p=m.get(k);if(!p||(!p.r&&e.r))m.set(k,e);});return [...m.values()].sort((u,v)=>(u.t||0)-(v.t||0)).slice(-lim);};
+  r.suivi=r.suivi||{res:{},flu:[],seances:[]};
+  const res=r.suivi.res||(r.suivi.res={});
+  for(const k of new Set([...Object.keys(a.suivi.res||{}),...Object.keys(b.suivi.res||{})]))res[k]=uni(a.suivi.res&&a.suivi.res[k],b.suivi.res&&b.suivi.res[k],e=>e.t+"|"+e.r,20);
+  r.suivi.flu=uni(a.suivi.flu,b.suivi.flu,e=>e.t,60);
+  r.suivi.seances=uni(a.suivi.seances,b.suivi.seances,e=>e.t,200);
+  r.suivi.jeux=uni(a.suivi.jeux,b.suivi.jeux,e=>e.id,80);
+  r.jours=r.jours||{};
+  for(const [d,j] of Object.entries(anc.jours||{})){const x=r.jours[d]||(r.jours[d]={fait:{},notes:{}});x.fait=Object.assign({},j.fait||{},x.fait||{});for(const k in (j.fait||{}))if(j.fait[k])x.fait[k]=true;x.notes=Object.assign({},j.notes||{},x.notes||{});if(j.bilanGagne)x.bilanGagne=true;}
+  for(const o of ["plans","sem","ov"]){r[o]=Object.assign({},anc[o]||{},r[o]||{});}
+  const ja=a.jeu||{},jb=b.jeu||{};
+  if(ja.total!==undefined||jb.total!==undefined){
+    const top=(ja.total||0)>=(jb.total||0)?ja:jb;r.jeu=JSON.parse(JSON.stringify(Object.assign({},rec.jeu||{},{coq:top.coq,total:top.total,nbEx:Math.max(ja.nbEx||0,jb.nbEx||0)})));
+    r.jeu.badges=Object.assign({},jb.badges||{},ja.badges||{});
+    r.jeu.semaines=Object.assign({},jb.semaines||{},ja.semaines||{});
+    r.jeu.echanges=uni(ja.echanges,jb.echanges,e=>e.t+"|"+e.r,100);
+    const sa=ja.serie||{},sb=jb.serie||{};r.jeu.serie=(sa.last||"")>=(sb.last||"")?sa:sb;}
+  r.reg=r.reg||{};if(!r.reg.prenom&&anc.reg&&anc.reg.prenom)r.reg.prenom=anc.reg.prenom;
+  r.intro=!!(a.intro||b.intro);
+  r.maj=Math.max(a.maj||0,b.maj||0);
+  return r;
+}
+const memes=(x,y)=>JSON.stringify(x)===JSON.stringify(y);
+
+async function syncLire(f){
+  const r=await fetch(syncUrl(f)+"?t="+Date.now(),{headers:syncHdr(),cache:"no-store"});
+  if(r.status===404)return {data:null,sha:null};
+  if(r.status===401||r.status===403)throw new Error("acces");
+  if(!r.ok)throw new Error("http"+r.status);
+  const j=await r.json();let data=null;try{data=JSON.parse(b64d(j.content||""));}catch(e){data=null;}
+  return {data,sha:j.sha};
+}
+async function syncEcrire(f,objet,sha){
+  const corps={message:"Mise à jour du "+new Date().toLocaleString("fr-FR"),content:b64e(JSON.stringify(objet))};
+  if(sha)corps.sha=sha;
+  const r=await fetch(syncUrl(f),{method:"PUT",headers:Object.assign({"Content-Type":"application/json"},syncHdr()),body:JSON.stringify(corps)});
+  if(r.status===409||r.status===422)return null;
+  if(r.status===401||r.status===403)throw new Error("acces");
+  if(!r.ok)throw new Error("http"+r.status);
+  return (await r.json()).content.sha;
+}
+async function syncListe(){
+  for(let essai=0;essai<3;essai++){
+    const {data,sha}=await syncLire("profils");
+    const loc={liste:PROFILS.liste,suppr:PROFILS.suppr,maj:PROFILS.maj||0};
+    const fus=data?fusionProfils(loc,data):loc;
+    if(!memes(fus.liste,PROFILS.liste)||!memes(fus.suppr,PROFILS.suppr)){PROFILS.liste=fus.liste;PROFILS.suppr=fus.suppr;PROFILS.maj=fus.maj;sauverProfils();majEnfants();}
+    if(data&&memes(fus.liste,data.liste)&&memes(fus.suppr,data.suppr))return;
+    if(await syncEcrire("profils",{liste:fus.liste,suppr:fus.suppr,maj:fus.maj},sha))return;
+  }
+}
+async function synchroniser(){
+  if(!syncActif())return;
+  if(syncEnCours){syncRelance=true;return;}
+  syncEnCours=true;syncEtat("🔄 Synchronisation…",false);
+  try{
+    await syncListe();
+    const f=fichierProfil(PROFILS.actif);
+    for(let essai=0;essai<3;essai++){
+      const {data,sha}=await syncLire(f);
+      const dist=data&&data.store?data.store:data;
+      const local=JSON.parse(JSON.stringify(STORE));
+      const neuf=!SYNC.vus||!SYNC.vus[f];
+      const fus=dist?fusion(neuf?Object.assign({},local,{maj:0}):local,dist):local;
+      if(neuf&&dist)fus.maj=Math.max(local.maj||0,dist.maj||0);
+      if(!memes(fus,local)){const sauf=REG.barreCachee;adopter(fus);REG.barreCachee=sauf;}
+      if(dist&&memes(fus,dist)){syncSha=sha;break;}
+      const nouv=await syncEcrire(f,{app:"ecole-a-la-maison",version:1,store:JSON.parse(JSON.stringify(STORE))},sha);
+      if(nouv){syncSha=nouv;break;}
+    }
+    SYNC.vus=SYNC.vus||{};SYNC.vus[f]=1;
+    syncEtat("☁️ Progrès synchronisés entre tes appareils · "+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}),true);
+  }catch(e){
+    syncEtat(e.message==="acces"?"⚠️ Synchronisation refusée : vérifie le jeton (☰ → Synchronisation)":(navigator.onLine===false?"📴 Hors ligne : la synchronisation reprendra avec internet":"⚠️ Synchronisation impossible pour l'instant, nouvel essai bientôt"),false);
+  }
+  syncEnCours=false;
+  if(syncRelance){syncRelance=false;setTimeout(synchroniser,1500);}
+}
+const syncEncours=()=>syncEnCours;
+function syncPlanifier(){if(!syncActif())return;clearTimeout(syncTimer);syncTimer=setTimeout(synchroniser,4000);}
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&syncActif())synchroniser();});
+window.addEventListener("online",()=>{if(syncActif())synchroniser();});
+setInterval(()=>{if(!document.hidden&&syncActif())synchroniser();},5*60*1000);
+
+function ouvrirSync(){
+  if(ENV_ART){ouvrirDialog("🔄 Synchronisation","<p>Cette version (sur ton compte Claude) se synchronise déjà toute seule entre tes appareils.</p>");return;}
+  const conn=!!(SYNC.token&&SYNC.depot);
+  ouvrirDialog("🔄 Synchronisation entre appareils",`
+   <p>Ses progrès sont enregistrés dans un dépôt GitHub <b>privé</b> : chaque appareil connecté retrouve les mêmes bilans, coquillages et programmes. Sans internet, l'application continue de fonctionner et se synchronise au retour de la connexion.</p>
+   <p class="note" id="syncEtat">${SYNC.etat||(conn?"Connecté.":"Cet appareil n'est pas encore connecté.")}</p>
+   ${conn?`<p class="semact"><button id="syncMaint">🔄 Synchroniser maintenant</button><button id="syncOff" class="o-btn cache">Déconnecter cet appareil</button></p><p class="mat">Dépôt : ${SYNC.depot}</p>`:""}
+   <h3>${conn?"Changer le jeton":"Connecter cet appareil"}</h3>
+   <ol class="etapes"><li>Une seule fois : crée un <b>jeton d'accès</b> sur GitHub (voir l'aide ci-dessous) et garde-le dans un endroit sûr.</li><li>Sur chaque appareil (PC, tablette) : colle le jeton ici, puis « Connecter ».</li></ol>
+   <p><label for="syncDepot">Dépôt privé</label><br><input id="syncDepot" value="${SYNC.depot||"Treefazer/ecole-a-la-maison-donnees"}" autocomplete="off"></p>
+   <p><label for="syncJeton">Jeton d'accès GitHub</label><br><input id="syncJeton" type="password" placeholder="github_pat_…" autocomplete="off"></p>
+   <p><button id="syncCo">Connecter</button></p>
+   <details><summary><b>Créer le jeton (5 minutes, une seule fois)</b></summary><ol class="etapes">
+    <li>Sur github.com : photo de profil → <b>Settings</b> → <b>Developer settings</b> → <b>Personal access tokens</b> → <b>Fine-grained tokens</b> → <b>Generate new token</b>.</li>
+    <li>Nom : « École à la maison ». Expiration : la plus longue proposée.</li>
+    <li><b>Repository access</b> : « Only select repositories » → <b>ecole-a-la-maison-donnees</b>.</li>
+    <li><b>Permissions → Repository permissions → Contents</b> : « Read and write ».</li>
+    <li><b>Generate token</b>, puis copie le jeton (il commence par github_pat_).</li></ol>
+    <p class="mat">Ce jeton ne donne accès qu'à ce dépôt de données. Il reste enregistré seulement dans cet appareil, jamais dans les progrès synchronisés.</p></details>`);
+  document.getElementById("syncCo").onclick=async()=>{
+    const t=document.getElementById("syncJeton").value.trim(),d=document.getElementById("syncDepot").value.trim().replace(/^https?:\/\/github\.com\//,"").replace(/\.git$/,"").replace(/\/$/,"");
+    if(!/^[\w.-]+\/[\w.-]+$/.test(d)){syncEtat("Le dépôt doit être de la forme compte/nom.",false);return;}
+    if(!t&&!SYNC.token){syncEtat("Colle d'abord le jeton.",false);return;}
+    SYNC.depot=d;if(t)SYNC.token=t;syncSauverReglages();await synchroniser();
+    if(SYNC.ok){toast("☁️ Cet appareil est connecté : ses progrès se synchronisent maintenant tout seuls.");document.getElementById("boite").close();}
+  };
+  const m=document.getElementById("syncMaint");if(m)m.onclick=()=>synchroniser();
+  const o=document.getElementById("syncOff");if(o)o.onclick=()=>{SYNC={};syncSauverReglages();etatSync("appareil");document.getElementById("boite").close();toast("Cet appareil n'est plus synchronisé. Ses progrès restent enregistrés dessus.");};
+}
+
+/* ================= PLUSIEURS ENFANTS ================= */
+function fusionProfils(a,b){
+  const suppr=[...new Set([...(a.suppr||[]),...(b.suppr||[])])].sort();
+  const rec=(a.maj||0)>=(b.maj||0)?a:b,anc=rec===a?b:a,m=new Map();
+  [...(anc.liste||[]),...(rec.liste||[])].forEach(p=>m.set(p.id,{id:p.id,prenom:p.prenom||""}));
+  let liste=[...m.values()].filter(p=>!suppr.includes(p.id));
+  if(!liste.length)liste=[{id:PROFILS.actif,prenom:REG.prenom||""}];
+  return {liste,suppr,maj:Math.max(a.maj||0,b.maj||0)};
+}
+const prenomActif=()=>REG.prenom||(PROFILS.liste.find(p=>p.id===PROFILS.actif)||{}).prenom||"";
+function chipEnfant(){return PROFILS.liste.length>1?` <span class="chip">👧 ${esc(prenomActif()||"Enfant")}</span>`:"";}
+function majEnfants(){const b=document.getElementById("btnEnfants");if(b)b.textContent=`👧 ${prenomActif()||"Enfant"} · ${PROFILS.liste.length>1?"changer d'enfant":"ajouter un enfant"}`;}
+let ART_PROFILS=null;
+async function brancherProfilsArt(db){
+  try{
+    const ref=db.doc("ecole/profils");ART_PROFILS=ref;
+    const s=await ref.get();const d=s.exists?s.data():null;
+    const loc={liste:PROFILS.liste,suppr:PROFILS.suppr,maj:PROFILS.maj||0};
+    const fus=d?fusionProfils(loc,d):loc;
+    if(!memes(fus.liste,PROFILS.liste)||!memes(fus.suppr,PROFILS.suppr)){PROFILS.liste=fus.liste;PROFILS.suppr=fus.suppr;PROFILS.maj=fus.maj;sauverProfils();majEnfants();}
+    if(!d||!memes(fus.liste,d.liste)||!memes(fus.suppr,d.suppr))await ref.set({liste:fus.liste,suppr:fus.suppr,maj:fus.maj});
+  }catch(e){}
+}
+function profilsModifies(){
+  if(ART_PROFILS)ART_PROFILS.set({liste:PROFILS.liste,suppr:PROFILS.suppr,maj:PROFILS.maj||0}).catch(()=>{});
+  majEnfants();
+}
+async function changerProfil(id){
+  if(id===PROFILS.actif)return;
+  sauver();
+  try{if(DIST)await ecrire();if(syncActif()){clearTimeout(syncTimer);await synchroniser();}}catch(e){}
+  PROFILS.actif=id;sauverProfils();location.reload();
+}
+function ouvrirEnfants(){
+  const niv=[[0,"CP"],[1,"CE1 · 1er trimestre"],[2,"CE1 · 2e trimestre"],[3,"CE1 · 3e trimestre"]];
+  ouvrirDialog("👧 Enfants",`<p>Chaque enfant a son propre niveau, ses bilans, sa semaine, ses notions à travailler et son lagon.</p>
+   <div class="plist">${PROFILS.liste.map(p=>`<div class="prow ${p.id===PROFILS.actif?"actif":""}"><b>${esc(p.prenom||"Sans prénom")}</b><span class="pact">${p.id===PROFILS.actif?'<span class="badge">en cours</span>':`<button class="o-btn" data-choisir="${p.id}">Choisir</button><button class="o-btn cache" data-retirer="${p.id}">Retirer</button>`}</span></div>`).join("")}</div>
+   <p id="zRet"></p>
+   <h3>Ajouter un enfant</h3>
+   <p><label for="npPrenom">Prénom</label><br><input id="npPrenom" autocomplete="off"></p>
+   <p><label for="npNiveau">Niveau de départ</label><br><select id="npNiveau">${niv.map(([v,t])=>`<option value="${v}" ${v===1?"selected":""}>${t}</option>`).join("")}</select></p>
+   <p><button id="npAjout">➕ Ajouter et passer à cet enfant</button></p>
+   <p class="mat">Les exercices couvrent le CP et le CE1. Pour un enfant en maternelle ou du CE2 au CM2, il faudra ajouter les exercices de son niveau : demande-le à Claude.</p>`);
+  const boite=document.getElementById("boitec");
+  boite.onclick=ev=>{const b=ev.target.closest("button");if(!b)return;
+    if(b.dataset.choisir){b.disabled=true;b.textContent="…";changerProfil(b.dataset.choisir);}
+    if(b.dataset.retirer){const id=b.dataset.retirer,p=PROFILS.liste.find(x=>x.id===id),z=document.getElementById("zRet");
+      z.innerHTML=`Retirer <b>${esc(p.prenom||"cet enfant")}</b> ? Ses progrès seront effacés de cet appareil. <button class="o-btn" id="retOui">Oui, retirer</button> <button class="o-btn cache" id="retNon">Annuler</button>`;
+      document.getElementById("retNon").onclick=()=>{z.innerHTML="";};
+      document.getElementById("retOui").onclick=()=>{PROFILS.liste=PROFILS.liste.filter(x=>x.id!==id);PROFILS.suppr=[...new Set([...PROFILS.suppr,id])].sort();PROFILS.maj=Date.now();sauverProfils();try{localStorage.removeItem(cleProfil(id));}catch(e){}profilsModifies();if(syncActif())synchroniser();ouvrirEnfants();};}
+    if(b.id==="npAjout"){const pr=document.getElementById("npPrenom").value.trim();if(!pr){document.getElementById("npPrenom").focus();return;}
+      const id="p"+Date.now().toString(36),nv=+document.getElementById("npNiveau").value;
+      const st=vide();st.reg={prenom:pr,niveau:nv};st.intro=true;st.maj=Date.now();
+      try{localStorage.setItem(cleProfil(id),JSON.stringify(st));}catch(e){}
+      PROFILS.liste.push({id,prenom:pr});PROFILS.maj=Date.now();sauverProfils();profilsModifies();
+      b.disabled=true;b.textContent="…";changerProfil(id);}
+  };
+}
+document.getElementById("btnEnfants").onclick=ouvrirEnfants;
+document.getElementById("btnSync").onclick=ouvrirSync;
+if(ENV_ART||location.protocol==="file:"){}
+majEnfants();
+
+majBoutons();afficherIntro();generer();setOnglet("jour");verifJournee(true);etatSync("appareil");majCompteur();brancherStockage();majBarreVisible();setTimeout(verifRetourJeu,800);if(syncActif()){syncEtat(SYNC.etat||'🔄 Synchronisation…',SYNC.ok);setTimeout(synchroniser,600);}
 </script>
 <script>
 if("serviceWorker" in navigator&&location.protocol.indexOf("http")===0){navigator.serviceWorker.register("sw.js").catch(function(){});}
