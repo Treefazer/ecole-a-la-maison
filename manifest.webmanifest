@@ -1,0 +1,17 @@
+{
+  "name": "École à la maison",
+  "short_name": "École",
+  "description": "Séances guidées CP-CE1, programme de la journée et de la semaine, suivi des progrès.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F7E6B8",
+  "theme_color": "#0E4D64",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
