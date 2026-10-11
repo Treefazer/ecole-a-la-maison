@@ -262,6 +262,7 @@ td.nw{white-space:nowrap}
 .pact{display:flex;gap:6px;flex-wrap:wrap}
 ol.etapes{padding-left:20px;line-height:1.5}
 dialog#boite select{font:inherit;padding:6px;border:2px solid #C7DADD;border-radius:8px;background:#fff;color:var(--ocean)}
+.lienjeton{display:inline-block;text-decoration:none;font-weight:800;padding:9px 12px}
 @media (max-width:520px){.barre{position:static}.onglets button{font-size:.68rem}.srow{flex-direction:column;gap:4px}.sjour{width:auto;display:flex;gap:8px;align-items:baseline}.bloc{flex-direction:column;gap:4px}.bloc .heure{flex-direction:row;width:auto;gap:8px;align-items:baseline}.lagon{height:260px}.items.c2{grid-template-columns:1fr}.fiche{padding:16px 12px}.groupe button{font-size:.85rem;padding:8px 6px}}
 @media print{
   .barre,.outils,.panneau,.note.parent,#viewer,#boite,.hors,.exo[hidden],.bilan,.retour,.score,.toast,.fete,.sesbar,.intro,.bact button,.bact .mini,.jopts,.programmer,.guidage,.chemin,.chprog,[hidden]{display:none!important}
@@ -1873,17 +1874,13 @@ function ouvrirSync(){
    <p class="note" id="syncEtat">${SYNC.etat||(conn?"Connecté.":"Cet appareil n'est pas encore connecté.")}</p>
    ${conn?`<p class="semact"><button id="syncMaint">🔄 Synchroniser maintenant</button><button id="syncOff" class="o-btn cache">Déconnecter cet appareil</button></p><p class="mat">Dépôt : ${SYNC.depot}</p>`:""}
    <h3>${conn?"Changer le jeton":"Connecter cet appareil"}</h3>
-   <ol class="etapes"><li>Une seule fois : crée un <b>jeton d'accès</b> sur GitHub (voir l'aide ci-dessous) et garde-le dans un endroit sûr.</li><li>Sur chaque appareil (PC, tablette) : colle le jeton ici, puis « Connecter ».</li></ol>
+   <ol class="etapes"><li>Ouvre le lien ci-dessous (connecté à GitHub) : tout est déjà rempli.</li><li>Dans « Repository access », choisis <b>Only select repositories</b> → <b>ecole-a-la-maison-donnees</b>.</li><li>Clique sur <b>Generate token</b>, copie le jeton, puis colle-le ici et appuie sur « Connecter ».</li></ol>
+   <p><a class="o-btn lienjeton" href="https://github.com/settings/personal-access-tokens/new?name=Ecole+a+la+maison&description=Synchronisation+des+progres+entre+appareils&target_name=Treefazer&expires_in=none&contents=write" target="_blank" rel="noopener">🔑 Créer le jeton sur GitHub (pré-rempli)</a></p>
+   <p class="mat">À faire sur chaque appareil (PC, tablette) : chacun a son propre jeton, que tu peux révoquer séparément sur GitHub. Le jeton ne donne accès qu'au dépôt de données et reste enregistré seulement sur cet appareil.</p>
    <p><label for="syncDepot">Dépôt privé</label><br><input id="syncDepot" value="${SYNC.depot||"Treefazer/ecole-a-la-maison-donnees"}" autocomplete="off"></p>
    <p><label for="syncJeton">Jeton d'accès GitHub</label><br><input id="syncJeton" type="password" placeholder="github_pat_…" autocomplete="off"></p>
    <p><button id="syncCo">Connecter</button></p>
-   <details><summary><b>Créer le jeton (5 minutes, une seule fois)</b></summary><ol class="etapes">
-    <li>Sur github.com : photo de profil → <b>Settings</b> → <b>Developer settings</b> → <b>Personal access tokens</b> → <b>Fine-grained tokens</b> → <b>Generate new token</b>.</li>
-    <li>Nom : « École à la maison ». Expiration : la plus longue proposée.</li>
-    <li><b>Repository access</b> : « Only select repositories » → <b>ecole-a-la-maison-donnees</b>.</li>
-    <li><b>Permissions → Repository permissions → Contents</b> : « Read and write ».</li>
-    <li><b>Generate token</b>, puis copie le jeton (il commence par github_pat_).</li></ol>
-    <p class="mat">Ce jeton ne donne accès qu'à ce dépôt de données. Il reste enregistré seulement dans cet appareil, jamais dans les progrès synchronisés.</p></details>`);
+`);
   document.getElementById("syncCo").onclick=async()=>{
     const t=document.getElementById("syncJeton").value.trim(),d=document.getElementById("syncDepot").value.trim().replace(/^https?:\/\/github\.com\//,"").replace(/\.git$/,"").replace(/\/$/,"");
     if(!/^[\w.-]+\/[\w.-]+$/.test(d)){syncEtat("Le dépôt doit être de la forme compte/nom.",false);return;}
