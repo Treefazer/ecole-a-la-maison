@@ -200,6 +200,7 @@ td.nw{white-space:nowrap}
 .srow{display:flex;gap:12px;border:2px solid #C7DADD;border-radius:12px;padding:10px 12px;background:#fff}
 .srow.auj{border-color:var(--corail);box-shadow:0 0 0 3px #FFD8CF}
 .srow.t-off{background:#F6F2E6;border-style:dashed}
+.srow.t-ecole{background:#EAF2FB;border-style:dashed;border-color:#9DBBDF}
 .srow.passe{background:#F7FAFA}
 .sjour{width:92px;flex:none}
 .sjour b{display:block;font-size:1.05rem}
@@ -263,6 +264,60 @@ td.nw{white-space:nowrap}
 ol.etapes{padding-left:20px;line-height:1.5}
 dialog#boite select{font:inherit;padding:6px;border:2px solid #C7DADD;border-radius:8px;background:#fff;color:var(--ocean)}
 .lienjeton{display:inline-block;text-decoration:none;font-weight:800;padding:9px 12px}
+/* Impressions */
+#impression{display:none}
+.imp{color:#000;font-size:11pt;line-height:1.35;background:#fff}
+.imp h1{font-size:18pt;margin:0}
+.imp h2{font-size:13.5pt;margin:14px 0 6px;padding-bottom:2px;border-bottom:2px solid #0E4D64}
+.imp h3{font-size:11pt;margin:10px 0 4px}
+.imphead{border-bottom:3px solid #0E4D64;margin-bottom:8px;padding-bottom:4px}
+.imphead p{margin:2px 0 0}
+.impsem{width:100%;border-collapse:collapse;table-layout:fixed}
+.impsem th,.impsem td{border:1px solid #555;padding:5px;vertical-align:top;font-size:10pt;text-align:left}
+.impsem thead th{background:#E6F0F2;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.impsem tbody th{width:92px;background:#F4F8F9}
+.impsem td.off{background:#eee;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.impsem tr.coches td{line-height:1.6}
+.gris{color:#777}
+.impnote,.implegende{font-size:9pt;color:#333;margin:6px 0}
+.impjour{break-inside:avoid;margin-top:12px}
+.impjour h2{font-size:12pt}
+.impliste{width:100%;border-collapse:collapse}
+.impliste td{border-bottom:1px solid #bbb;padding:3px 5px;font-size:9.5pt;vertical-align:top}
+.impliste td.h{width:60px;font-weight:700;white-space:nowrap}
+.impliste td.c{width:26px;text-align:center;font-size:13pt}
+.impliste tr.pause td{color:#555;font-style:italic}
+.imptab{width:100%;border-collapse:collapse;margin:4px 0 8px}
+.imptab th,.imptab td{border:1px solid #999;padding:4px 6px;font-size:9.5pt;vertical-align:top;text-align:left}
+.imptab thead th{background:#E6F0F2;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.imptab tr{break-inside:avoid}
+.impchiffres{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.impchiffres div{border:1px solid #999;border-radius:6px;padding:6px 10px}
+.flu td{border:none;border-bottom:1px solid #ddd}
+.barre-c{width:55%}
+.barre-c span{display:block;height:10px;background:#2BB3A8;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.nw{white-space:nowrap}
+@media print{
+  body.mode-impr>*:not(#impression){display:none!important}
+  body.mode-impr #impression{display:block!important}
+  body.mode-impr{background:#fff;padding:0}
+}
+.obs{margin-top:14px}
+.obs label{display:block;margin-bottom:4px}
+.obs textarea{width:100%;font:inherit;border:2px solid #C7DADD;border-radius:10px;padding:8px;color:var(--ocean);background:#fff}
+dialog#boite input[type=date]{font:inherit;padding:5px;border:2px solid #C7DADD;border-radius:8px;width:auto}
+.impul{margin:4px 0 8px;padding-left:20px}
+.impul li{margin:3px 0;font-size:10pt}
+.impsign{margin-top:24px;font-size:10.5pt}
+.imp h3{break-after:avoid}
+
+.jmaison{border-top:1px dashed #C7DADD;margin-top:8px;padding-top:6px}
+.jmcarte{border:2px solid #C7DADD;border-radius:12px;padding:8px 12px;margin:10px 0;background:#fff}
+.jmcarte.focus{border-color:var(--corail);box-shadow:0 0 0 3px #FFD8CF}
+.jmcarte p{margin:.35em 0}
+.jmt{font-size:1.1em}
+.lienjm{font-size:.85em;padding:2px 8px;margin-left:4px}
+.bloc.jmsoir{margin-top:12px}
 @media (max-width:520px){.barre{position:static}.onglets button{font-size:.68rem}.srow{flex-direction:column;gap:4px}.sjour{width:auto;display:flex;gap:8px;align-items:baseline}.bloc{flex-direction:column;gap:4px}.bloc .heure{flex-direction:row;width:auto;gap:8px;align-items:baseline}.lagon{height:260px}.items.c2{grid-template-columns:1fr}.fiche{padding:16px 12px}.groupe button{font-size:.85rem;padding:8px 6px}}
 @media print{
   .barre,.outils,.panneau,.note.parent,#viewer,#boite,.hors,.exo[hidden],.bilan,.retour,.score,.toast,.fete,.sesbar,.intro,.bact button,.bact .mini,.jopts,.programmer,.guidage,.chemin,.chprog,[hidden]{display:none!important}
@@ -290,6 +345,8 @@ dialog#boite select{font:inherit;padding:6px;border:2px solid #C7DADD;border-rad
     <button id="btnSync" class="clair">🔄 Synchronisation</button>
     <button id="chronoSeance" class="clair">⏱ Chrono séance</button>
     <button id="btnSuivi" class="clair">📈 Suivi et export</button>
+    <button id="btnCarnet" class="clair">📒 Carnet de bord</button>
+    <button id="btnJeuxM" class="clair">🎲 Nos jeux de société</button>
     <button id="btnGuide" class="clair">👤 Guide du parent</button>
     <button id="btnProg" class="clair">📋 Programme</button>
     <button id="impr" class="clair">🖨 Imprimer</button>
@@ -325,6 +382,7 @@ dialog#boite select{font:inherit;padding:6px;border:2px solid #C7DADD;border-rad
 <div id="fete" class="fete" hidden></div>
 <div id="sesbar" class="sesbar" hidden><span class="stemps"></span><span class="sprog"><i></i></span><span class="sexo"></span><button data-s="pause">⏸ Pause</button><button data-s="fin">■ Terminer</button></div>
 <dialog id="boite"><div id="boitec"></div><p><button id="boitef">Fermer</button></p></dialog>
+<div id="impression"></div><style id="stylePage"></style>
 
 <dialog id="viewer" aria-label="Jeu en ligne">
   <div class="vhead">
@@ -1203,7 +1261,7 @@ function majBarre(){
 function finSeance(){
   if(!SES.on)return;SES.on=false;clearInterval(SES.timer);
   SUIVI.seances.push({t:Date.now(),min:Math.max(1,Math.round(SES.t/60)),m:matiere});SUIVI.seances=SUIVI.seances.slice(-200);
-  if(SES.bloc){jourEtat(auj()).fait[SES.bloc]=true;SES.bloc=null;}
+  if(SES.bloc){jourEtat(auj()).fait[SES.bloc]=true;journaliser(auj(),SES.bloc,true);SES.bloc=null;}
   sauver();
   document.getElementById("sesbar").hidden=true;document.body.classList.remove("enseance");
   const sansBilan=etat.findIndex((s,i)=>!s.res&&!document.getElementById("exo"+i).hidden);
@@ -1252,7 +1310,8 @@ document.getElementById("fiche").addEventListener("click",ev=>{
 /* ================= MA SEMAINE ET MA JOURNÉE ================= */
 const JOURS=["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"],MOIS=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
 const MAJ=s=>s[0].toUpperCase()+s.slice(1);
-const TYPES={complet:"☀️ Journée complète",matin:"🌤 Matin seulement",court:"⏱ Courte (1 h)",off:"😴 Pas d'école"};
+const TYPES={complet:"☀️ Journée complète",matin:"🌤 Matin seulement",court:"⏱ Courte (1 h)",ecole:"🏫 À l'école",off:"😴 Repos, pas de classe"};
+const maisonT=t=>t!=="off"&&t!=="ecole";
 const HEURES=["07:30","07:45","08:00","08:15","08:30","08:45","09:00","09:15","09:30","10:00","10:30","13:30","14:00","16:30","17:00"];
 let JVAR={},JOUR_VU=null,SEM_VU=null;
 const idee=(cat,w)=>POOL[cat][((w+6)%7+(JVAR[cat]||0))%POOL[cat].length];
@@ -1261,6 +1320,7 @@ function lundiDe(d){const x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate
 const datesSemaine=lun=>Array.from({length:7},(_,i)=>{const x=new Date(lun);x.setDate(x.getDate()+i);return dateCle(x);});
 const cleSem=c=>dateCle(lundiDe(jourDe(c)));
 function typeJour(c){const o=STORE.ov[c];return o&&o.type?o.type:REG.semType[jourDe(c).getDay()][0];}
+const jourMaison=c=>maisonT(typeJour(c));
 function debutJour(c){const o=STORE.ov[c];return o&&o.debut?o.debut:REG.semType[jourDe(c).getDay()][1];}
 function setJour(c,champ,v){(STORE.ov[c]||(STORE.ov[c]={}))[champ]=v;sauver();}
 const MCOURT=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
@@ -1279,7 +1339,7 @@ function choisirRev(used){
 }
 function programmerSemaine(lun){
   const wk=dateCle(lun),a=auj(),toutes=datesSemaine(lun);
-  const jours=toutes.filter(c=>c>=a&&typeJour(c)!=="off");
+  const jours=toutes.filter(c=>c>=a&&jourMaison(c));
   const res={niveau,jours:{}},deja=new Set();
   const avant=STORE.sem[wk];
   if(avant)toutes.filter(c=>c<a&&avant.jours[c]).forEach(c=>{res.jours[c]=avant.jours[c];});
@@ -1297,7 +1357,7 @@ function programmerSemaine(lun){
 const affectation=c=>{const s=STORE.sem[cleSem(c)];return s&&s.jours[c];};
 function apercuPlan(c){
   if(STORE.plans[c])return STORE.plans[c];
-  if(typeJour(c)==="off")return null;
+  if(!jourMaison(c))return null;
   const as=affectation(c);
   const fr=planSeance("fr",niveau,as&&as.fr),ma=planSeance("maths",niveau,as&&as.maths);
   let rev=null;if(typeJour(c)==="complet"){rev=as&&as.rev?as.rev:choisirRev(new Set([...fr,...ma].map(x=>x.m+":"+x.key)));rev={...rev,lvl:niveauDepart(rev.key,niveau,rev.m).lvl,etape:"Révision",min:10};}
@@ -1306,7 +1366,7 @@ function apercuPlan(c){
 
 /* Blocs d'une journée selon son type */
 function blocsDuJour(c,plan){
-  const w=jourDe(c).getDay(),type=typeJour(c);if(type==="off")return [];
+  const w=jourDe(c).getDay(),type=typeJour(c);if(!maisonT(type))return [];
   const dur=items=>items?items.reduce((a,x)=>a+x.min,0):REG.dur;
   const fr={id:"fr",d:dur(plan&&plan.fr),ico:"📖",t:"Français · séance guidée",x:"Les exercices s'ouvrent dans l'application, avec le chrono.",seance:"fr",items:plan&&plan.fr};
   const ma={id:"maths",d:dur(plan&&plan.maths),ico:"🔢",t:"Maths · séance guidée",x:"Avec des objets et des dés dès que ça coince.",seance:"maths",items:plan&&plan.maths};
@@ -1321,7 +1381,7 @@ function blocsDuJour(c,plan){
    {id:"recre",d:20,ico:"🌴",t:"Récréation et collation",x:"Dehors, sans écran. Un fruit, de l'eau.",pause:true},
    {id:"lecture",d:15,ico:"📚",t:"Lecture plaisir",x:"Un vrai livre : elle lit une page, tu lis la suivante. Parlez de l'histoire : « Que va-t-il se passer ? »"}];
   const e=idee("ecrit",w);b.push({id:"ecrit",d:15,ico:"✏️",t:"Écrire pour de vrai : "+e[0].toLowerCase(),x:e[1]+" Relisez ensemble : majuscule, point, sens.",cat:"ecrit",note:"Ecrire"});
-  if(w===3)b.push({id:"jeu",d:20,ico:"🎲",t:"Jeu de société",x:"Petits chevaux, Uno, Yam's, ou une idée de jeu de l'application."});
+  if(w===3)b.push(blocJeu(c,20));
   else{const m=idee("monde",w);b.push({id:"monde",d:30,ico:"",t:m[0]+" · découvrir le monde",x:m[1]+" Elle raconte ou dessine ce qu'elle a découvert.",cat:"monde"});}
   const apres=type==="complet";
   if(!apres)b.push({id:"bilan",d:10,ico:"⭐",t:"Bilan de la matinée",x:"Elle raconte ce qu'elle a appris et ce qu'elle a aimé. Cochez ensemble ce qui a été fait."});
@@ -1332,7 +1392,7 @@ function blocsDuJour(c,plan){
     b.push({id:"art",d:30,ico:"",t:a[0]+" · arts",x:a[1],cat:"art"});
     b.push({id:"sport",d:45,ico:"",t:s[0]+" · sport",x:s[1],cat:"sport"});
     b.push(w===1||w===4?{id:"anglais",d:10,ico:"🗣️",t:"Anglais",x:"Une comptine ou une chanson en anglais ; compter jusqu'à 10, les couleurs."}:{id:"offerte",d:10,ico:"📖",t:"Lecture offerte",x:"Tu lis une histoire à voix haute, juste pour le plaisir."});
-    b.push({id:"jeu",d:20,ico:"🎲",t:"Jeu de société ou de dés",x:"Reprendre une idée de jeu de l'application (le banquier, la course aux dés…)."});
+    b.push(blocJeu(c,20));
     b.push({id:"gouter",d:15,ico:"🍌",t:"Goûter",x:"Une vraie pause.",pause:true,ancre:"16:00"});
     b.push({id:"bilan",d:10,ico:"⭐",t:"Bilan de la journée",x:"Elle raconte ce qu'elle a appris et ce qu'elle a aimé. Cochez ensemble ce qui a été fait."});
   }
@@ -1348,7 +1408,7 @@ function horaire(blocs,debut){
   return out;
 }
 const journeeDe=(c,plan)=>horaire(blocsDuJour(c,plan===undefined?apercuPlan(c):plan),debutJour(c));
-const journeeDuJour=()=>{const c=auj();return typeJour(c)==="off"?null:journeeDe(c);};
+const journeeDuJour=()=>{const c=auj();return !jourMaison(c)?null:journeeDe(c);};
 const minutesTravail=c=>journeeDe(c).filter(b=>!b.pause&&b.id!=="cuisine").reduce((a,b)=>a+b.d,0);
 
 function programmerJournee(){
@@ -1369,14 +1429,17 @@ function pasLeTemps(){
   sauver();renderJournee();toast(`😴 ${msg} Si vous avez 10 minutes ce soir : une histoire lue ensemble.`,[["📆 Voir ma semaine",()=>setOnglet("semaine")]]);
 }
 
-function selType(id,c){return `<select id="${id}" aria-label="Type de journée">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${typeJour(c)===k?"selected":""}>${v}</option>`).join("")}</select>`;}
+function selType(id,c){const t=typeJour(c),o=k=>`<option value="${k}" ${t===k?"selected":""}>${TYPES[k]}</option>`;return `<select id="${id}" aria-label="Type de journée"><optgroup label="🏠 École à la maison">${["complet","matin","court"].map(o).join("")}</optgroup><optgroup label="Pas de classe à la maison">${["ecole","off"].map(o).join("")}</optgroup></select>`;}
 function selHeure(id,c){const v=debutJour(c),l=HEURES.includes(v)?HEURES:[...HEURES,v].sort();return `<select id="${id}" aria-label="Heure de début">${l.map(x=>`<option value="${x}" ${x===v?"selected":""}>${hmin(enMin(x))}</option>`).join("")}</select>`;}
 function renderJournee(){
+  const ta0=document.getElementById("jobs"),foc=ta0&&document.activeElement===ta0,pos=foc?ta0.selectionStart:0;if(ta0)jourEtat(JOUR_VU||auj()).obs=ta0.value;
   const a=auj(),c=JOUR_VU||a,estAuj=c===a,d=jourDe(c),w=d.getDay(),j=jourEtat(c),type=typeJour(c),plan=STORE.plans[c];
-  let h=`<div class="entete"><h2>📅 ${MAJ(JOURS[w])} ${d.getDate()} ${MOIS[d.getMonth()]}${chipEnfant()}</h2><div class="champs jopts">${selType("jtype",c)} ${type!=="off"?`<label for="jdebut">Début</label> ${selHeure("jdebut",c)}`:""}</div></div>`;
+  let h=`<div class="entete"><h2>📅 ${MAJ(JOURS[w])} ${d.getDate()} ${MOIS[d.getMonth()]}${chipEnfant()}</h2><div class="champs jopts">${selType("jtype",c)} ${maisonT(type)?`<label for="jdebut">Début</label> ${selHeure("jdebut",c)}`:""}</div></div>`;
   if(!estAuj)h+=`<div class="apercu"><span>👀 ${c<a?"Journée passée.":"Aperçu. Le jour même, appuie sur « Programmer ma journée » : les niveaux seront ajustés à ses derniers bilans."}</span><button class="o-btn" data-retour="1">← Aujourd'hui</button><button class="o-btn" data-ong="semaine">📆 Ma semaine</button></div>`;
-  if(type==="off"){
-    h+=`<div class="note"><p><b>${w===0||w===6?"C'est le week-end : pas d'école.":"Pas d'école prévue ce jour-là."}</b></p><p>Juste du plaisir : une histoire le soir, un jeu de société, une sortie dehors. Les enfants apprennent aussi en jouant, en cuisinant, en se promenant.</p><p>Vous avez finalement un peu de temps ? Choisis « ⏱ Courte (1 h) » en haut.</p></div>`;
+  if(!maisonT(type)){
+    h+=type==="ecole"?`<div class="note"><p><b>🏫 Journée à l'école.</b> Rien n'est programmé à la maison ce jour-là.</p><p>Le soir, seulement si elle en a envie (15 min maximum) : une histoire lue ensemble, ou un jeu de société. Demande-lui ce qu'elle a fait en classe : raconter, c'est déjà du langage oral.</p><p>Finalement elle reste à la maison ? Choisis « ☀️ Journée complète » ou « ⏱ Courte (1 h) » en haut.</p></div>`
+      :`<div class="note"><p><b>${w===0||w===6?"C'est le week-end : pas de classe.":"Repos : pas de classe prévue ce jour-là."}</b></p><p>Juste du plaisir : une histoire le soir, un jeu de société, une sortie dehors. Les enfants apprennent aussi en jouant, en cuisinant, en se promenant.</p><p>Vous avez finalement un peu de temps ? Choisis « ⏱ Courte (1 h) » en haut.</p></div>`;
+    h+=typeof jeuSoirHtml==="function"?jeuSoirHtml(c):"";
     document.getElementById("journee").innerHTML=h;return;
   }
   if(estAuj){
@@ -1396,11 +1459,12 @@ function renderJournee(){
     if(b.note&&c<=a){const n=j.notes&&j.notes[b.id];h+=`<span class="mini">${ECH.slice(0,4).map(([r,ic,t])=>`<button class="o-btn res" data-noteb="${b.id}" data-r="${r}" title="${t}" aria-pressed="${n===r}">${ic}</button>`).join("")}</span>`;}
     if(!b.pause&&c<=a)h+=`<label class="coche"><input type="checkbox" data-fait="${b.id}" ${j.fait[b.id]?"checked":""}> Fait</label>`;
     h+=`</div></div></div>`;});
-  h+=`</div><p class="note">À l'école, le français prend environ deux fois plus de temps que les maths : c'est pour ça qu'il y a plus de lecture et d'écriture. À la maison, 2 h 30 à 3 h d'activités dans la journée, c'est déjà beaucoup. Pour l'écriture sur papier, note comment ça s'est passé avec ⭐⭐⭐ ⭐⭐ ⭐ ✋ : les prochains exercices d'écriture s'adapteront.</p>`;
+  h+=`</div>${c<=a?`<div class="obs"><label for="jobs"><b>📝 Observations du jour</b> <small>(pour le carnet de bord : sorties, livres lus, travaux réalisés, attitude)</small></label><textarea id="jobs" rows="3" placeholder="Ex. : sortie au marché, compté la monnaie ; a lu seule 2 pages.">${esc(j.obs||"")}</textarea></div>`:""}<p class="note">À l'école, le français prend environ deux fois plus de temps que les maths : c'est pour ça qu'il y a plus de lecture et d'écriture. À la maison, 2 h 30 à 3 h d'activités dans la journée, c'est déjà beaucoup. Pour l'écriture sur papier, note comment ça s'est passé avec ⭐⭐⭐ ⭐⭐ ⭐ ✋ : les prochains exercices d'écriture s'adapteront.</p>`;
   document.getElementById("journee").innerHTML=h;
+  if(foc){const t=document.getElementById("jobs");if(t){t.focus();try{t.setSelectionRange(pos,pos);}catch(e){}}}
 }
 function verifJournee(silencieux){
-  const c=auj(),j=STORE.jours[c];if(!j||!j.guide||!STORE.plans[c]||typeJour(c)==="off")return;
+  const c=auj(),j=STORE.jours[c];if(!j||!j.guide||!STORE.plans[c]||!jourMaison(c))return;
   const blocs=journeeDe(c,STORE.plans[c]);
   const d=new Date(),now=d.getHours()*60+d.getMinutes();
   const b=blocs.find(x=>now>=x.debut&&now<x.debut+x.d);if(!b||j.dernier===b.id)return;
@@ -1416,11 +1480,12 @@ function lancerBloc(id){
   else{matiere=id;majBoutons();seanceDuJour(true);SES.bloc=id;}
   setOnglet("fiches",true);
 }
+document.getElementById("journee").addEventListener("input",ev=>{if(ev.target.id==="jobs"){jourEtat(JOUR_VU||auj()).obs=ev.target.value;clearTimeout(window.__obsT);window.__obsT=setTimeout(sauver,800);}});
 document.getElementById("journee").addEventListener("change",ev=>{
   const x=ev.target,c=JOUR_VU||auj();
   if(x.id==="jdebut"){setJour(c,"debut",x.value);renderJournee();}
   if(x.id==="jtype"){setJour(c,"type",x.value);const wk=cleSem(c);if(STORE.sem[wk]&&c>=auj())programmerSemaine(lundiDe(jourDe(c)));renderJournee();}
-  if(x.dataset.fait){const j=jourEtat(c);j.fait[x.dataset.fait]=x.checked;sauver();renderJournee();
+  if(x.dataset.fait){const j=jourEtat(c);j.fait[x.dataset.fait]=x.checked;journaliser(c,x.dataset.fait,x.checked);sauver();renderJournee();
     const bl=journeeDe(c),tout=bl.filter(b=>!b.pause).every(b=>j.fait[b.id]);
     if(x.checked&&x.dataset.fait==="bilan"&&!j.bilanGagne&&c===auj()){j.bilanGagne=true;const bs=[];if(tout)donnerBadge("journee",bs);gagner(tout?4:2,tout?"🌈 Une journée complète ! Bravo !":"⭐ Belle journée ! Bravo pour tes efforts.",bs);}}
 });
@@ -1433,7 +1498,7 @@ document.getElementById("journee").addEventListener("click",ev=>{
   if(b.dataset.ong){setOnglet(b.dataset.ong);return;}
   if(b.dataset.autre){JVAR[b.dataset.autre]=(JVAR[b.dataset.autre]||0)+1;renderJournee();}
   if(b.dataset.lancer)lancerBloc(b.dataset.lancer);
-  if(b.dataset.noteb){const j=jourEtat(c);j.notes=j.notes||{};const premiere=!j.notes[b.dataset.noteb];j.notes[b.dataset.noteb]=b.dataset.r;j.fait[b.dataset.noteb]=true;
+  if(b.dataset.noteb){const j=jourEtat(c);j.notes=j.notes||{};const premiere=!j.notes[b.dataset.noteb];j.notes[b.dataset.noteb]=b.dataset.r;j.fait[b.dataset.noteb]=true;journaliser(c,b.dataset.noteb,true);
     const k="Ecrire";noter("fr",k,niveauDepart(k,niveau,"fr").lvl,b.dataset.r);renderJournee();
     if(premiere)gagner(2,"✍️ Bravo pour ton texte !");else toast("Noté. Les prochains exercices d'écriture s'adapteront.");}
 });
@@ -1444,36 +1509,38 @@ function renderSemaine(){
   const fin=jourDe(dates[6]),deb=jourDe(dates[0]);
   const ecart=Math.round((lun-lunA)/(7*864e5));
   const titre=deb.getMonth()===fin.getMonth()?`du ${deb.getDate()} au ${fin.getDate()} ${MOIS[fin.getMonth()]}`:`du ${deb.getDate()} ${MOIS[deb.getMonth()]} au ${fin.getDate()} ${MOIS[fin.getMonth()]}`;
-  const travail=dates.filter(c=>typeJour(c)!=="off"),totMin=travail.reduce((s,c)=>s+minutesTravail(c),0);
+  const travail=dates.filter(c=>jourMaison(c)),totMin=travail.reduce((s,c)=>s+minutesTravail(c),0);
   const passes=travail.filter(c=>c<=a),faits=passes.filter(c=>seancesDu(c).length||jourEtat(c).fait.fr||jourEtat(c).fait.maths);
   let h=`<div class="entete"><h2>📆 Semaine ${titre}${chipEnfant()}</h2><div class="champs semnav"><button class="o-btn" data-sem="-1" aria-label="Semaine précédente">←</button>${ecart?`<button class="o-btn" data-sem="0">Cette semaine</button>`:""}<button class="o-btn" data-sem="1" aria-label="Semaine suivante">→</button></div></div>`;
-  h+=`<p class="sresume"><b>${travail.length} jour${travail.length>1?"s":""} d'école</b> · environ ${duree(totMin)} d'activités · niveau ${nomNiveau(niveau)}${passes.length?` · <b>${faits.length} / ${passes.length}</b> jour${passes.length>1?"s":""} fait${faits.length>1?"s":""} pour l'instant`:""}</p>`;
-  const futur=dates.some(c=>c>=a&&typeJour(c)!=="off");
-  h+=`<div class="semact">${futur?`<button id="btnProgSem" class="${sem?"o-btn":"gros"}">${sem?"🔄 Reprogrammer la semaine":"🗓 Programmer la semaine"}</button>`:""}<button id="btnSemType" class="o-btn">⭐ Garder comme semaine type</button><button id="btnSemReset" class="o-btn cache">↩ Revenir à la semaine type</button></div>`;
-  if(!sem&&futur)h+=`<p class="note">Choisis pour chaque jour le temps que vous avez, puis appuie sur « Programmer la semaine ». Je répartis les notions sur les jours d'école : d'abord ce qui coince, puis le programme dans l'ordre. Chaque notion revient deux jours plus tard en révision.</p>`;
+  const nEc=dates.filter(c=>typeJour(c)==="ecole").length;
+  h+=`<p class="sresume"><b>🏠 ${travail.length} jour${travail.length>1?"s":""} d'école à la maison</b>${nEc?` · 🏫 ${nEc} jour${nEc>1?"s":""} à l'école`:""} · environ ${duree(totMin)} d'activités · niveau ${nomNiveau(niveau)}${passes.length?` · <b>${faits.length} / ${passes.length}</b> jour${passes.length>1?"s":""} fait${faits.length>1?"s":""} pour l'instant`:""}</p>`;
+  const futur=dates.some(c=>c>=a&&jourMaison(c));
+  h+=`<div class="semact">${futur?`<button id="btnProgSem" class="${sem?"o-btn":"gros"}">${sem?"🔄 Reprogrammer la semaine":"🗓 Programmer la semaine"}</button>`:""}<button id="btnSemType" class="o-btn">⭐ Garder comme semaine type</button><button id="btnImpSem" class="o-btn">🖨 Imprimer la semaine</button><button id="btnImpSemD" class="o-btn">🖨 Semaine + journées détaillées</button><button id="btnSemReset" class="o-btn cache">↩ Revenir à la semaine type</button></div>`;
+  if(!sem&&futur)h+=`<p class="note">Choisis pour chaque jour le temps que vous avez, puis appuie sur « Programmer la semaine ». Pour chaque jour, choisis 🏠 école à la maison (journée, matin ou 1 h), 🏫 à l'école, ou 😴 repos. Je répartis les notions sur les jours d'école à la maison : d'abord ce qui coince, puis le programme dans l'ordre. Chaque notion revient deux jours plus tard en révision.</p>`;
   h+=`<div class="semaine">`;
   dates.forEach(c=>{const d=jourDe(c),t=typeJour(c),as=sem&&sem.jours[c],passe=c<a,ns=seancesDu(c).length,jt=STORE.jours[c];
     let stat="";
-    if(passe&&t!=="off")stat=ns||(jt&&(jt.fait.fr||jt.fait.maths))?`<span class="sstat ok">✅ ${ns?ns+" séance"+(ns>1?"s":""):"fait"}</span>`:`<span class="sstat">⏭ Pas fait : ses notions reviendront en reprogrammant</span>`;
-    if(c===a&&t!=="off")stat=ns?`<span class="sstat ok">✅ ${ns} séance${ns>1?"s":""} aujourd'hui</span>`:"";
+    if(passe&&maisonT(t))stat=ns||(jt&&(jt.fait.fr||jt.fait.maths))?`<span class="sstat ok">✅ ${ns?ns+" séance"+(ns>1?"s":""):"fait"}</span>`:`<span class="sstat">⏭ Pas fait : ses notions reviendront en reprogrammant</span>`;
+    if(c===a&&maisonT(t))stat=ns?`<span class="sstat ok">✅ ${ns} séance${ns>1?"s":""} aujourd'hui</span>`:"";
     h+=`<div class="srow t-${t} ${c===a?"auj":""} ${passe?"passe":""}"><div class="sjour"><b>${MAJ(JOURS[d.getDay()])}</b><small>${jourCourt(c)}${c===a?" · aujourd'hui":""}</small></div><div class="scorps">
-      <div class="ssel">${selType("st-"+c,c).replace('id="st-'+c+'"',`id="st-${c}" data-stype="${c}"`)}${t!=="off"?selHeure("sd-"+c,c).replace('id="sd-'+c+'"',`id="sd-${c}" data-sdebut="${c}"`):""}</div>
-      ${t!=="off"&&as?`<p class="snot">📖 ${NOMK.fr[as.fr]} · 🔢 ${NOMK.maths[as.maths]}${as.rev&&t==="complet"?` · 🔁 ${NOMK[as.rev.m][as.rev.key]}`:""}</p>`:""}
-      ${t!=="off"?`<p class="smin">${hmin(enMin(debutJour(c)))} · environ ${duree(minutesTravail(c))} d'activités</p>`:""}
+      <div class="ssel">${selType("st-"+c,c).replace('id="st-'+c+'"',`id="st-${c}" data-stype="${c}"`)}${maisonT(t)?selHeure("sd-"+c,c).replace('id="sd-'+c+'"',`id="sd-${c}" data-sdebut="${c}"`):""}</div>
+      ${maisonT(t)&&as?`<p class="snot">📖 ${NOMK.fr[as.fr]} · 🔢 ${NOMK.maths[as.maths]}${as.rev&&t==="complet"?` · 🔁 ${NOMK[as.rev.m][as.rev.key]}`:""}</p>`:""}
+      ${maisonT(t)?`<p class="smin">${hmin(enMin(debutJour(c)))} · environ ${duree(minutesTravail(c))} d'activités</p>`:""}
+      ${t==="ecole"?`<p class="smin">🏫 En classe : rien à programmer à la maison</p>`:""}
       ${stat}
-      ${t!=="off"?`<button class="o-btn" data-voir="${c}">Voir la journée</button>`:""}
+      ${maisonT(t)?`<button class="o-btn" data-voir="${c}">Voir la journée</button>`:""}
     </div></div>`;});
   h+=`</div>`;
   if(sem){const used=new Set();Object.values(sem.jours).forEach(x=>{used.add("fr:"+x.fr);used.add("maths:"+x.maths);});
     const reste=m=>FICHES[m][niveau].filter(k=>k!=="Fluence"&&k!==(m==="maths"?"Calcul":"Son")&&!used.has(m+":"+k)).map(k=>NOMK[m][k]);
     const rf=reste("fr"),rm=reste("maths");
     if(rf.length||rm.length)h+=`<p class="note">Pas de séance principale cette semaine (ce sera pour la suivante) : ${[...rm,...rf].join(", ")}. Le calcul mental, les sons et la lecture à voix haute reviennent tous les jours en échauffement et en fin de séance.</p>`;}
-  h+=`<div class="note"><p><b>Une semaine réaliste</b> : 4 jours avec des séances courtes valent mieux que 2 grosses journées. Les jours où vous avez peu de temps, choisis « Courte (1 h) » : français, maths et lecture, l'essentiel.</p><p>Un jour sans école n'est pas un échec. Le matin même, appuie sur « 😴 Pas le temps aujourd'hui » dans Ma journée : ses notions sont reportées sur les autres jours. Les jours sans école prévus ne cassent pas sa série de jours.</p></div>`;
+  h+=`<div class="note"><p><b>Une semaine réaliste</b> : 4 jours avec des séances courtes valent mieux que 2 grosses journées. Les jours où vous avez peu de temps, choisis « Courte (1 h) » : français, maths et lecture, l'essentiel.</p><p>Un jour sans école n'est pas un échec. Le matin même, appuie sur « 😴 Pas le temps aujourd'hui » dans Ma journée : ses notions sont reportées sur les autres jours. Les jours à l'école et les jours de repos prévus ne cassent pas sa série de jours.</p></div>`;
   document.getElementById("semainev").innerHTML=h;
 }
 document.getElementById("semainev").addEventListener("change",ev=>{
   const x=ev.target;
-  const reprog=c=>{const wk=cleSem(c);if(STORE.sem[wk]&&c>=auj()){programmerSemaine(lundiDe(jourDe(c)));toast("📆 Semaine réorganisée : les notions sont réparties sur les jours d'école restants.");}};
+  const reprog=c=>{const wk=cleSem(c);if(STORE.sem[wk]&&c>=auj()){programmerSemaine(lundiDe(jourDe(c)));toast("📆 Semaine réorganisée : les notions sont réparties sur les jours d'école à la maison restants.");}};
   if(x.dataset.stype){setJour(x.dataset.stype,"type",x.value);reprog(x.dataset.stype);renderSemaine();}
   if(x.dataset.sdebut){setJour(x.dataset.sdebut,"debut",x.value);renderSemaine();}
 });
@@ -1483,6 +1550,8 @@ document.getElementById("semainev").addEventListener("click",ev=>{
   if(b.dataset.sem!==undefined){const n=+b.dataset.sem;if(n===0)SEM_VU=null;else{const x=new Date(lun);x.setDate(x.getDate()+7*n);SEM_VU=x;}renderSemaine();return;}
   if(b.dataset.voir){JOUR_VU=b.dataset.voir===auj()?null:b.dataset.voir;setOnglet("jour");window.scrollTo({top:0});return;}
   if(b.id==="btnProgSem"){programmerSemaine(lun);renderSemaine();toast("🗓 Semaine programmée. Chaque matin, ouvre « Ma journée » et appuie sur « Programmer ma journée » : les niveaux seront ajustés à ses derniers bilans.");return;}
+  if(b.id==="btnImpSem"){imprimerSemaine(false);return;}
+  if(b.id==="btnImpSemD"){imprimerSemaine(true);return;}
   if(b.id==="btnSemType"){dates.forEach(c=>{REG.semType[jourDe(c).getDay()]=[typeJour(c),debutJour(c)];});sauver();renderSemaine();toast("⭐ Semaine type enregistrée : elle servira pour les semaines suivantes.");return;}
   if(b.id==="btnSemReset"){dates.forEach(c=>{if(c>=auj())delete STORE.ov[c];});if(STORE.sem[dateCle(lun)])programmerSemaine(lun);sauver();renderSemaine();toast("↩ Les jours à venir reprennent la semaine type.");return;}
 });
@@ -1535,7 +1604,7 @@ document.getElementById("btnSuivi").onclick=()=>{
   const tab=m=>{const l=Object.keys(NOMK[m]).filter(k=>hist(m,k).length).map(k=>{const h=hist(m,k),d=h[h.length-1];return `<tr><td>${NOMK[m][k]}</td><td class="nw">${h.slice(-5).map(x=>emo(x.r)).join(" ")}</td><td>${NOM_NIV[d.lvl]}</td><td>${conseilNotion(m,k,niveau)}</td></tr>`;});
     return l.length?`<div class="defile"><table class="couv"><tr><th>Notion</th><th>Derniers bilans</th><th>Niveau</th><th>Prochaine fois</th></tr>${l.join("")}</table></div>`:"<p>Pas encore de bilan.</p>";};
   const flu=SUIVI.flu.slice(-8).map(x=>`${new Date(x.t).getDate()}/${new Date(x.t).getMonth()+1} : <b>${x.score}</b>`).join(" · ");
-  ouvrirDialog("📈 Suivi de ses progrès",`<p><b>Cette semaine</b> : ${sem.length} séance(s), ${sem.reduce((a,s)=>a+s.min,0)} minutes.</p><h3>Maths</h3>${tab("maths")}<h3>Français</h3>${tab("fr")}<h3>Lecture à voix haute (mots en 1 minute)</h3><p>${flu||"Pas encore de score."}</p><p class="note">${DIST?"Les progrès sont enregistrés sur ton compte : tu les retrouves sur tes autres appareils.":"Les progrès sont enregistrés sur cet appareil, dans ce navigateur."} On regarde la tendance sur plusieurs semaines, pas un jour isolé.</p><h3>Me montrer ses progrès</h3><p>Pour que Claude analyse ses progrès et propose la suite : copie le résumé et colle-le dans la conversation, ou envoie le fichier de progrès.</p><p class="semact"><button id="copierRes">📋 Copier le résumé pour Claude</button><button id="exporter" class="o-btn">📤 Exporter les progrès (fichier)</button><label class="o-btn import">📥 Importer un fichier<input type="file" id="importer" accept=".json,application/json" hidden></label></p><p id="zImp"></p><textarea id="resTxt" rows="6" hidden readonly></textarea><p id="zEff"><button id="effacer" class="o-btn cache">Effacer tout le suivi</button></p>`);
+  ouvrirDialog("📈 Suivi de ses progrès",`<p><b>Cette semaine</b> : ${sem.length} séance(s), ${sem.reduce((a,s)=>a+s.min,0)} minutes.</p><h3>Maths</h3>${tab("maths")}<h3>Français</h3>${tab("fr")}<h3>Lecture à voix haute (mots en 1 minute)</h3><p>${flu||"Pas encore de score."}</p><p class="note">${DIST?"Les progrès sont enregistrés sur ton compte : tu les retrouves sur tes autres appareils.":"Les progrès sont enregistrés sur cet appareil, dans ce navigateur."} On regarde la tendance sur plusieurs semaines, pas un jour isolé.</p><h3>Imprimer l'historique</h3><p class="semact"><select id="impPer" aria-label="Période"><option value="30">30 derniers jours</option><option value="7">7 derniers jours</option><option value="0">Depuis le début</option></select><button id="impHist">🖨 Imprimer l'historique</button></p><h3>Me montrer ses progrès</h3><p>Pour que Claude analyse ses progrès et propose la suite : copie le résumé et colle-le dans la conversation, ou envoie le fichier de progrès.</p><p class="semact"><button id="copierRes">📋 Copier le résumé pour Claude</button><button id="exporter" class="o-btn">📤 Exporter les progrès (fichier)</button><label class="o-btn import">📥 Importer un fichier<input type="file" id="importer" accept=".json,application/json" hidden></label></p><p id="zImp"></p><textarea id="resTxt" rows="6" hidden readonly></textarea><p id="zEff"><button id="effacer" class="o-btn cache">Effacer tout le suivi</button></p>`);
   brancherExport();
   document.getElementById("effacer").onclick=()=>{document.getElementById("zEff").innerHTML=`Tous les bilans, scores et séances seront effacés. <button id="effOui" class="o-btn">Oui, effacer</button> <button id="effNon" class="o-btn cache">Annuler</button>`;
     document.getElementById("effNon").onclick=()=>document.getElementById("boite").close();
@@ -1546,10 +1615,10 @@ document.getElementById("btnSuivi").onclick=()=>{
 const LIB={a3:"seule, facilement",a2:"seule, en cherchant",a1:"avec aide",a0:"difficile",f:"fatigue"};
 function resumeTexte(){
   const d=new Date(),p=REG.prenom||"l'enfant";
-  const sem=SUIVI.seances.filter(s=>Date.now()-s.t<7*864e5),dates=datesSemaine(lundiDe(d)),trav=dates.filter(c=>typeJour(c)!=="off");
+  const sem=SUIVI.seances.filter(s=>Date.now()-s.t<7*864e5),dates=datesSemaine(lundiDe(d)),trav=dates.filter(c=>jourMaison(c));
   let t=`Progrès de ${p} (École à la maison), résumé du ${d.getDate()} ${MOIS[d.getMonth()]} ${d.getFullYear()}\nNiveau de travail : ${nomNiveau(niveau)}\n`;
   t+=`Séances : ${sem.length} sur les 7 derniers jours (${sem.reduce((a,s)=>a+s.min,0)} min), ${SUIVI.seances.length} en tout.\n`;
-  t+=`Semaine en cours : ${trav.length} jours d'école prévus (${trav.map(c=>JOURS[jourDe(c).getDay()]+" "+typeJour(c)).join(", ")}).\n`;
+  t+=`Semaine en cours : ${trav.length} jours d'école à la maison prévus (${trav.map(c=>JOURS[jourDe(c).getDay()]+" "+typeJour(c)).join(", ")}).\n`;
   t+=`Échelle : ⭐⭐⭐ seule facilement, ⭐⭐ seule en cherchant, ⭐ avec aide, ✋ difficile, 😴 fatigue. 🎮 = bilan donné après un jeu en ligne (logicieleducatif.fr).\n`;
   for(const m of ["maths","fr"]){t+=`\n${m==="maths"?"MATHS":"FRANÇAIS"} (bilans du plus ancien au plus récent ; niveau du dernier ; conseil)\n`;
     const ks=Object.keys(NOMK[m]).filter(k=>hist(m,k).length);
@@ -1570,6 +1639,7 @@ async function exporterProgres(){
   toast("📤 Fichier enregistré dans tes téléchargements. Tu peux l'envoyer dans la conversation avec Claude, ou l'importer sur un autre appareil.");
 }
 function brancherExport(){
+  document.getElementById("impHist").onclick=()=>{const v=+document.getElementById("impPer").value;document.getElementById("boite").close();imprimerHistorique(v);};
   document.getElementById("copierRes").onclick=async()=>{const t=resumeTexte(),z=document.getElementById("resTxt");z.value=t;
     try{await navigator.clipboard.writeText(t);toast("📋 Résumé copié. Colle-le dans la conversation avec Claude et demande : « Analyse ses progrès ».");}
     catch(e){z.hidden=false;z.focus();z.select();toast("Sélectionne le texte affiché, copie-le, puis colle-le dans la conversation avec Claude.");}};
@@ -1585,6 +1655,8 @@ function brancherExport(){
 
 /* Impression : directe dans le fichier, par fichier à ouvrir dans la page publiée */
 async function imprimer(){
+  if(onglet==="semaine"){imprimerSemaine(false);return;}
+  if(onglet==="notions"){imprimerHistorique(30);return;}
   if(!ENV_ART){window.print();return;}
   const dl=await window.claude.use("downloads");
   if(!dl){toast("L'impression n'est pas disponible ici. Ouvre la version fichier de l'application pour imprimer.");return;}
@@ -1605,7 +1677,7 @@ document.getElementById("corr").onclick=e=>{const on=document.body.classList.tog
 document.getElementById("impr").onclick=imprimer;
 document.getElementById("impr").textContent=ENV_ART?"📥 Fiche à imprimer":"🖨 Imprimer";
 
-function afficherIntro(){const z=document.getElementById("intro");if(STORE.intro){z.hidden=true;return;}z.hidden=false;z.innerHTML=`<p><b>👋 Mode d'emploi en 30 secondes</b></p><ol><li><b>📆 Semaine</b> : choisis pour chaque jour le temps que vous avez (journée, matin, 1 h, pas d'école), puis <b>🗓 Programmer la semaine</b>.</li><li><b>📅 Journée → 🗓 Programmer ma journée</b> chaque matin : exercices précis, pauses, repas, goûter, et je te préviens à chaque changement.</li><li>Dans chaque séance, le chrono te dit quand changer d'exercice, faire une pause ou arrêter.</li><li>Après chaque exercice, même sur papier, note ⭐⭐⭐ ⭐⭐ ⭐ ✋ 😴. Je garde tout en mémoire et j'adapte la séance suivante, jusqu'au CP si besoin.</li><li>Si ça bloque : <b>🪜 Plus simple</b>, <b>👤 Comment l'aider</b>, ou <b>🎲 Idée de jeu</b> avec des objets.</li><li><b>🎯 À travailler</b> : ce qui est acquis, en cours ou à retravailler. Après un jeu en ligne, je te demande comment ça s'est passé.</li><li><b>☰</b> en haut à droite : chrono, suivi, <b>👤 Guide du parent</b> (à lire une fois), et « Cacher la barre ».</li></ol><p><label for="introPrenom">Prénom de l'enfant : </label><input id="introPrenom" value="${REG.prenom||""}" autocomplete="off"></p><button id="introOk">J'ai compris</button>`;
+function afficherIntro(){const z=document.getElementById("intro");if(STORE.intro){z.hidden=true;return;}z.hidden=false;z.innerHTML=`<p><b>👋 Mode d'emploi en 30 secondes</b></p><ol><li><b>📆 Semaine</b> : choisis pour chaque jour le temps que vous avez (🏠 journée, matin ou 1 h à la maison, 🏫 à l'école, ou 😴 repos), puis <b>🗓 Programmer la semaine</b>.</li><li><b>📅 Journée → 🗓 Programmer ma journée</b> chaque matin : exercices précis, pauses, repas, goûter, et je te préviens à chaque changement.</li><li>Dans chaque séance, le chrono te dit quand changer d'exercice, faire une pause ou arrêter.</li><li>Après chaque exercice, même sur papier, note ⭐⭐⭐ ⭐⭐ ⭐ ✋ 😴. Je garde tout en mémoire et j'adapte la séance suivante, jusqu'au CP si besoin.</li><li>Si ça bloque : <b>🪜 Plus simple</b>, <b>👤 Comment l'aider</b>, ou <b>🎲 Idée de jeu</b> avec des objets.</li><li><b>🎯 À travailler</b> : ce qui est acquis, en cours ou à retravailler. Après un jeu en ligne, je te demande comment ça s'est passé.</li><li><b>☰</b> en haut à droite : chrono, suivi, <b>👤 Guide du parent</b> (à lire une fois), et « Cacher la barre ».</li></ol><p><label for="introPrenom">Prénom de l'enfant : </label><input id="introPrenom" value="${REG.prenom||""}" autocomplete="off"></p><button id="introOk">J'ai compris</button>`;
   document.getElementById("introOk").onclick=()=>{const p=document.getElementById("introPrenom").value.trim();if(p)REG.prenom=p;STORE.intro=true;sauver();z.hidden=true;regenerer();if(onglet==="lagon")renderLagon();};}
 function rafraichirTout(){STORE.jeu=Object.assign({coq:0,total:0,nbEx:0,badges:{},serie:{last:"",n:0},echanges:[],ecritsJour:{}},STORE.jeu||{});majCompteur();niveau=REG.niveau;majBoutons();afficherIntro();regenerer();if(onglet==="jour")renderJournee();}
 
@@ -1672,10 +1744,10 @@ document.getElementById("lagonv").addEventListener("click",ev=>{
   document.getElementById("echOui").onclick=()=>{const J=J_();if(J.coq<p)return;J.coq-=p;J.echanges.push({t:Date.now(),r,p});sauver();majCompteur();renderLagon();toast(`🎉 ${r} : profite bien !`);};
 });
 function enregistrerSerie(){const J=J_(),a=auj();if(J.serie.last===a)return;
-  const x=jourDe(a);let prev=null;for(let k=0;k<14;k++){x.setDate(x.getDate()-1);const c=dateCle(x);if(typeJour(c)!=="off"){prev=c;break;}}
+  const x=jourDe(a);let prev=null;for(let k=0;k<14;k++){x.setDate(x.getDate()-1);const c=dateCle(x);if(jourMaison(c)){prev=c;break;}}
   J.serie.n=J.serie.last===prev?J.serie.n+1:1;J.serie.last=a;}
 function verifSemaine(bs){
-  const J=J_(),lun=lundiDe(new Date()),wk=dateCle(lun),js=datesSemaine(lun).filter(c=>typeJour(c)!=="off");
+  const J=J_(),lun=lundiDe(new Date()),wk=dateCle(lun),js=datesSemaine(lun).filter(c=>jourMaison(c));
   if(!js.length||(J.semaines&&J.semaines[wk]))return false;
   const faits=new Set(SUIVI.seances.map(s=>dateCle(new Date(s.t))));
   if(!js.every(c=>faits.has(c)))return false;
@@ -1686,7 +1758,6 @@ SUIVI.jeux=SUIVI.jeux||[];
 function clicJeu(a,ev){
   const e={id:"j"+Date.now().toString(36),t:Date.now(),m:a.dataset.m||"",k:a.dataset.k||"",l:+(a.dataset.l||1),titre:a.textContent.trim(),url:a.href,r:null};
   SUIVI.jeux.push(e);SUIVI.jeux=SUIVI.jeux.slice(-80);STORE.jeuEnCours=e.id;sauver();
-  if(!ENV_ART){ev.preventDefault();ouvrirJeu(a.href,e.titre);}
 }
 const jeuParId=id=>SUIVI.jeux.find(x=>x.id===id);
 function evaluerJeu(id,r){
@@ -1725,7 +1796,7 @@ function statutNotion(m,k){
 let FILTRE_N="tout";
 function renderNotions(){
   const ms=FILTRE_N==="tout"?["maths","fr"]:[FILTRE_N];
-  let h=`<div class="entete"><h2>🎯 Notions à travailler${chipEnfant()}</h2><div class="champs semnav">${[["tout","Tout"],["maths","🔢 Maths"],["fr","📖 Français"]].map(([v,t])=>`<button class="o-btn" data-filtre="${v}" aria-pressed="${FILTRE_N===v}">${t}</button>`).join("")}</div></div>`;
+  let h=`<div class="entete"><h2>🎯 Notions à travailler${chipEnfant()}</h2><div class="champs semnav">${[["tout","Tout"],["maths","🔢 Maths"],["fr","📖 Français"]].map(([v,t])=>`<button class="o-btn" data-filtre="${v}" aria-pressed="${FILTRE_N===v}">${t}</button>`).join("")}<button class="o-btn" data-imphist="1">🖨 Imprimer l'historique</button></div></div>`;
   h+=`<p class="sresume">Niveau ${nomNiveau(niveau)} · d'après les bilans des exercices, de l'écriture sur papier et des jeux en ligne (🎮).</p>`;
   h+=`<div class="nresume">${["maths","fr"].map(m=>{const ks=FICHES[m][niveau],c={ret:0,cours:0,nv:0,acq:0};ks.forEach(k=>c[statutNotion(m,k)]++);
     return `<div><b>${m==="maths"?"🔢 Maths":"📖 Français"}</b> · ${c.acq} / ${ks.length} acquises<span class="sprog large"><i style="width:${c.acq/ks.length*100}%"></i></span><small>🔴 ${c.ret} à retravailler · 🟠 ${c.cours} en cours · ⚪ ${c.nv} pas encore vues</small></div>`;}).join("")}</div>`;
@@ -1752,6 +1823,7 @@ document.getElementById("notionsv").addEventListener("click",ev=>{
   const a=ev.target.closest("a.lien");if(a){clicJeu(a,ev);return;}
   const b=ev.target.closest("button");if(!b)return;
   if(b.dataset.filtre){FILTRE_N=b.dataset.filtre;renderNotions();return;}
+  if(b.dataset.imphist){imprimerHistorique(0);return;}
   if(b.dataset.evj){evaluerJeu(b.dataset.evj,b.dataset.r);return;}
   if(b.dataset.p){const p=document.getElementById(b.dataset.p);p.hidden=!p.hidden;b.setAttribute("aria-expanded",String(!p.hidden));return;}
   if(b.dataset.entr){const [m,k]=b.dataset.entr.split("|");const lvl=niveauDepart(k,niveau,m).lvl;lancerPlan(m,[{m,key:k,lvl,etape:"Entraînement",min:6}],null,true,niveau);setOnglet("fiches",true);}
@@ -1954,6 +2026,386 @@ document.getElementById("btnEnfants").onclick=ouvrirEnfants;
 document.getElementById("btnSync").onclick=ouvrirSync;
 if(ENV_ART||location.protocol==="file:"){}
 majEnfants();
+
+/* ================= IMPRESSIONS : SEMAINE ET HISTORIQUE ================= */
+const LIBC={a3:"seule, facilement",a2:"seule, en cherchant",a1:"avec aide",a0:"difficile",f:"fatigue"};
+const dCourte=t=>{const d=new Date(t);return `${d.getDate()}/${d.getMonth()+1}`;};
+const dLongue=c=>{const d=jourDe(c);return `${MAJ(JOURS[d.getDay()])} ${d.getDate()} ${MOIS[d.getMonth()]}`;};
+const legendeEch=()=>`<p class="implegende">Échelle : ${ECH.map(([r,ic,t])=>`${ic} ${t}`).join(" · ")} · 🎮 = après un jeu en ligne</p>`;
+
+async function imprimerContenu(titre,html,paysage,fichier){
+  const page=`@page{size:A4 ${paysage?"landscape":"portrait"};margin:10mm}`;
+  if(ENV_ART){
+    const dl=await window.claude.use("downloads");
+    if(!dl){toast("L'impression n'est pas disponible ici. Utilise l'application installée ou le fichier sur ton PC.");return;}
+    const css=document.querySelector("style").textContent;
+    const doc=`<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(titre)}</title><style>${css}\n${page}\nbody{background:#fff}</style></head><body><div class="imp">${html}</div><script>window.onload=function(){setTimeout(function(){window.print()},400)}<\/script></body></html>`;
+    try{await dl.save({filename:fichier+".html",data:doc});toast("Ouvre le fichier enregistré : l'impression se lance toute seule.");}catch(e){if(e&&e.code!=="cancelled")toast("Le fichier n'a pas pu être enregistré.");}
+    return;
+  }
+  const z=document.getElementById("impression"),st=document.getElementById("stylePage");
+  z.innerHTML=`<div class="imp">${html}</div>`;st.textContent=page;document.body.classList.add("mode-impr");
+  const fin=()=>{document.body.classList.remove("mode-impr");z.innerHTML="";st.textContent="";window.removeEventListener("afterprint",fin);};
+  window.addEventListener("afterprint",fin);
+  setTimeout(()=>{window.print();setTimeout(()=>{if(!matchMedia("print").matches)fin();},1500);},50);
+}
+
+/* ---------- Programme de la semaine ---------- */
+function htmlSemaine(lun,detail){
+  const dates=datesSemaine(lun),sem=STORE.sem[dateCle(lun)],a=auj();
+  const cols=dates.filter((c,i)=>i<5||jourMaison(c));
+  const d0=jourDe(dates[0]),d6=jourDe(dates[6]);
+  const periode=d0.getMonth()===d6.getMonth()?`du ${d0.getDate()} au ${d6.getDate()} ${MOIS[d6.getMonth()]} ${d6.getFullYear()}`:`du ${d0.getDate()} ${MOIS[d0.getMonth()]} au ${d6.getDate()} ${MOIS[d6.getMonth()]} ${d6.getFullYear()}`;
+  const vide=(c,p)=>`<td class="off">${typeJour(c)==="ecole"?(p?"🏫 À l'école":""):(p?"—":"")}</td>`;
+  const cell=(c,f,p)=>!jourMaison(c)?vide(c,p):`<td>${f(c)||(c<a?"<span class='gris'>—</span>":"<span class='gris'>choisi le jour même</span>")}</td>`;
+  const faitsDu=(c,m)=>{const l=[];for(const [id,hh] of Object.entries(SUIVI.res)){const [mm,k]=id.split(":");if(mm===m&&hh.some(x=>dateCle(new Date(x.t))===c))l.push(NOMK[m][k]||k);}return l;};
+  const as=c=>sem&&sem.jours[c];
+  const notionCell=(c,m)=>{if(c<a){const f=faitsDu(c,m);if(f.length)return "✔ "+f.join(", ");}return as(c)?NOMK[m][as(c)[m]]:"";};
+  const blocs=c=>!jourMaison(c)?[]:journeeDe(c,STORE.plans[c]||apercuPlan(c));
+  const trouve=(c,id)=>blocs(c).find(b=>b.id===id);
+  let h=`<header class="imphead"><h1>Programme de la semaine${prenomActif()?` · ${esc(prenomActif())}`:""}</h1><p>${MAJ(periode)} · niveau ${nomNiveau(niveau)}</p></header>`;
+  h+=`<table class="impsem"><thead><tr><th></th>${cols.map(c=>`<th>${dLongue(c)}<br><small>${!jourMaison(c)?(typeJour(c)==="ecole"?"À l'école":"Repos"):TYPES[typeJour(c)].replace(/^\S+\s/,"")+" · "+hmin(enMin(debutJour(c)))}</small></th>`).join("")}</tr></thead><tbody>`;
+  h+=`<tr><th>📖 Français</th>${cols.map(c=>cell(c,x=>notionCell(x,"fr"),true)).join("")}</tr>`;
+  h+=`<tr><th>🔢 Maths</th>${cols.map(c=>cell(c,x=>notionCell(x,"maths"))).join("")}</tr>`;
+  h+=`<tr><th>🔁 Révision</th>${cols.map(c=>cell(c,x=>typeJour(x)==="complet"?(as(x)&&as(x).rev?NOMK[as(x).rev.m][as(x).rev.key]:""):"<span class='gris'>—</span>")).join("")}</tr>`;
+  h+=`<tr><th>✏️ Écrire</th>${cols.map(c=>cell(c,x=>{const b=trouve(x,"ecrit");return b?b.t.replace("Écrire pour de vrai : ",""):"<span class='gris'>—</span>";})).join("")}</tr>`;
+  h+=`<tr><th>🌍 Autres</th>${cols.map(c=>cell(c,x=>blocs(x).filter(b=>["monde","art","sport","anglais","jeu"].includes(b.id)).map(b=>esc(b.t.replace(/ · (découvrir le monde|arts|sport)$/,""))).join("<br>")||"<span class='gris'>—</span>")).join("")}</tr>`;
+  h+=`<tr><th>⏱ Activités</th>${cols.map(c=>cell(c,x=>"≈ "+duree(minutesTravail(x)))).join("")}</tr>`;
+  h+=`<tr class="coches"><th>✅ Fait</th>${cols.map(c=>!jourMaison(c)?vide(c,false):`<td>☐ Français<br>☐ Maths<br>☐ Lecture<br>☐ Bilan</td>`).join("")}</tr>`;
+  h+=`</tbody></table>`;
+  h+=`<p class="impnote">Les exercices précis et leur niveau sont choisis chaque matin dans l'application (« Programmer ma journée »), d'après les derniers bilans. Après chaque exercice, note : ${ECH.map(([r,ic,t])=>`${ic} ${t}`).join(" · ")}.</p>`;
+  if(detail){
+    cols.filter(c=>jourMaison(c)).forEach(c=>{const pl=STORE.plans[c];
+      h+=`<section class="impjour"><h2>${dLongue(c)} · ${TYPES[typeJour(c)].replace(/^\S+\s/,"")}</h2><table class="impliste"><tbody>`;
+      blocs(c).forEach(b=>{h+=`<tr class="${b.pause?"pause":""}"><td class="h">${hmin(b.debut)}</td><td><b>${b.ico} ${esc(b.t)}</b> <small>(${b.d} min)</small>${b.items?`<br><small>${b.items.map(it=>`${it.etape} : ${NOMK[it.m][it.key]}${pl?` (${NOM_NIV[it.lvl]})`:""}`).join(" · ")}</small>`:""}</td><td class="c">${b.pause?"":"☐"}</td></tr>`;});
+      h+=`</tbody></table></section>`;});
+  }
+  return h;
+}
+function imprimerSemaine(detail){
+  const lun=SEM_VU||lundiDe(new Date());
+  if(!STORE.sem[dateCle(lun)]&&datesSemaine(lun).some(c=>c>=auj()&&jourMaison(c))){programmerSemaine(lun);if(onglet==="semaine")renderSemaine();}
+  imprimerContenu("Programme de la semaine",htmlSemaine(lun,detail),true,"semaine-"+dateCle(lun));
+}
+
+/* ---------- Historique des progrès ---------- */
+function htmlHistorique(jours){
+  const depuis=jours?Date.now()-jours*864e5:0,p=prenomActif(),dans=t=>t>=depuis;
+  const ses=SUIVI.seances.filter(s=>dans(s.t)),flu=SUIVI.flu.filter(x=>dans(x.t)),jx=(SUIVI.jeux||[]).filter(x=>x.r&&dans(x.t));
+  const debut=jours?new Date(depuis):new Date(Math.min(Date.now(),...ses.map(s=>s.t),...Object.values(SUIVI.res).flat().map(x=>x.t)));
+  const per=`du ${debut.getDate()} ${MOIS[debut.getMonth()]} ${debut.getFullYear()} au ${new Date().getDate()} ${MOIS[new Date().getMonth()]} ${new Date().getFullYear()}`;
+  const J=STORE.jeu||{};
+  let h=`<header class="imphead"><h1>Suivi des progrès${p?` · ${esc(p)}`:""}</h1><p>${MAJ(per)} · niveau de travail ${nomNiveau(niveau)}</p></header>`;
+  const joursFaits=new Set(ses.map(s=>dateCle(new Date(s.t)))).size;
+  h+=`<div class="impchiffres"><div><b>${ses.length}</b> séances</div><div><b>${duree(ses.reduce((a,s)=>a+s.min,0))}</b> de séances guidées</div><div><b>${joursFaits}</b> jours avec séance</div><div><b>${J.total||0}</b> coquillages · <b>${Object.keys(J.badges||{}).length}</b> badges</div></div>`;
+  h+=`<h2>Où en est-elle ?</h2>`;
+  for(const m of ["maths","fr"]){
+    const ks=FICHES[m][niveau];const c={ret:0,cours:0,nv:0,acq:0};ks.forEach(k=>c[statutNotion(m,k)]++);
+    h+=`<h3>${m==="maths"?"🔢 Maths":"📖 Français"} · ${c.acq} / ${ks.length} notions acquises · ${c.cours} en cours · ${c.ret} à retravailler · ${c.nv} pas encore vues</h3>`;
+    h+=`<table class="imptab"><thead><tr><th>Notion</th><th>Statut</th><th>Bilans (date · niveau)</th><th>Prochaine fois</th></tr></thead><tbody>`;
+    const lignes=Object.keys(NOMK[m]).filter(k=>ks.includes(k)||hist(m,k).length);
+    lignes.sort((x,y)=>ORDRE_S.indexOf(statutNotion(m,x))-ORDRE_S.indexOf(statutNotion(m,y)));
+    lignes.forEach(k=>{const hh=hist(m,k).filter(x=>dans(x.t)),s=statutNotion(m,k);
+      h+=`<tr><td>${NOMK[m][k]}</td><td class="nw">${STAT[s][1]} ${STAT[s][0]}</td><td>${hh.length?hh.map(x=>`<span class="nw">${dCourte(x.t)} ${x.src==="jeu"?"🎮":""}${emo(x.r)} <small>${NOM_NIV[x.lvl]?NOM_NIV[x.lvl].replace("CE1 · ","").replace(" trimestre"," trim."):""}</small></span>`).join(" · "):"<span class='gris'>—</span>"}</td><td>${hist(m,k).length?conseilNotion(m,k,niveau):"à découvrir"}</td></tr>`;});
+    h+=`</tbody></table>`;
+  }
+  h+=`<h2>Lecture à voix haute</h2>`;
+  if(flu.length){const mx=Math.max(70,...flu.map(x=>x.score));
+    h+=`<table class="imptab flu"><tbody>${flu.map(x=>`<tr><td class="nw">${dCourte(x.t)}</td><td class="barre-c"><span style="width:${Math.round(x.score/mx*100)}%"></span></td><td class="nw"><b>${x.score}</b> mots / min</td></tr>`).join("")}</tbody></table><p class="impnote">Repère de fin de CE1 : environ 70 mots par minute.</p>`;}
+  else h+=`<p class="gris">Pas encore de score sur cette période.</p>`;
+  h+=`<h2>Jeux en ligne évalués</h2>`;
+  h+=jx.length?`<table class="imptab"><thead><tr><th>Date</th><th>Jeu</th><th>Notion</th><th>Bilan</th></tr></thead><tbody>${jx.map(x=>`<tr><td class="nw">${dCourte(x.t)}</td><td>${esc(x.titre)}</td><td>${x.m&&x.k&&NOMK[x.m][x.k]?NOMK[x.m][x.k]:"—"}</td><td class="nw">${emo(x.r)} ${LIBC[norm(x.r)]||""}</td></tr>`).join("")}</tbody></table>`:`<p class="gris">Aucun jeu évalué sur cette période.</p>`;
+  h+=`<h2>Séances par semaine</h2>`;
+  const parSem={};ses.forEach(s=>{const k=dateCle(lundiDe(new Date(s.t)));(parSem[k]=parSem[k]||[]).push(s);});
+  const ks=Object.keys(parSem).sort();
+  h+=ks.length?`<table class="imptab"><thead><tr><th>Semaine</th><th>Séances</th><th>Durée</th><th>Jours d'école à la maison prévus / avec séance</th></tr></thead><tbody>${ks.map(k=>{const l=parSem[k],dts=datesSemaine(jourDe(k)),prev=dts.filter(c=>jourMaison(c)).length,faits=new Set(l.map(s=>dateCle(new Date(s.t)))).size;return `<tr><td class="nw">du ${dCourte(jourDe(k))}</td><td>${l.length}</td><td>${duree(l.reduce((a,s)=>a+s.min,0))}</td><td>${prev} / ${faits}</td></tr>`;}).join("")}</tbody></table>`:`<p class="gris">Pas encore de séance guidée enregistrée sur cette période.</p>`;
+  const journal=[];for(const [id,l] of Object.entries(SUIVI.res)){const [m,k]=id.split(":");l.forEach(x=>{if(dans(x.t))journal.push({...x,m,k});});}
+  journal.sort((x,y)=>x.t-y.t);
+  h+=`<h2>Journal des bilans</h2>`;
+  h+=journal.length?`<table class="imptab"><thead><tr><th>Date</th><th>Matière</th><th>Notion</th><th>Niveau</th><th>Bilan</th></tr></thead><tbody>${journal.map(x=>`<tr><td class="nw">${dCourte(x.t)} ${new Date(x.t).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}</td><td>${x.m==="maths"?"Maths":"Français"}</td><td>${NOMK[x.m]&&NOMK[x.m][x.k]||x.k}</td><td class="nw">${NOM_NIV[x.lvl]||""}</td><td class="nw">${x.src==="jeu"?"🎮 ":""}${emo(x.r)} ${LIBC[norm(x.r)]||""}</td></tr>`).join("")}</tbody></table>`:`<p class="gris">Pas encore de bilan sur cette période.</p>`;
+  h+=legendeEch()+`<p class="impnote">L'application garde les 20 derniers bilans de chaque notion.</p>`;
+  return h;
+}
+function imprimerHistorique(jours){imprimerContenu("Suivi des progrès",htmlHistorique(jours),false,"suivi-"+((prenomActif()||"enfant").toLowerCase().normalize("NFD").replace(/[^a-z0-9]/g,""))+"-"+auj());}
+
+/* ================= CARNET DE BORD (justificatif d'instruction) ================= */
+const DOMAINES={rit:"Rituels (date, calendrier, calcul mental oral)",fr:"Français (lecture, écriture, étude de la langue)",maths:"Mathématiques",monde:"Questionner le monde",arts:"Arts plastiques et éducation musicale",eps:"Éducation physique et sportive",lv:"Langue vivante (anglais)",emc:"Langage oral, enseignement moral et civique",autre:"Autres activités"};
+function domaineBloc(b){if(b.dom)return b.dom;return {rituel:"rit",fr:"fr",maths:"maths",lecture:"fr",ecrit:"fr",offerte:"fr",monde:"monde",art:"arts",sport:"eps",anglais:"lv",jeu:"maths",cuisine:"maths",bilan:"emc",revision:(b.items&&b.items[0]&&b.items[0].m)||"maths"}[b.id]||"autre";}
+function journaliser(c,id,on){
+  const j=jourEtat(c);j.log=j.log||{};
+  if(!on){delete j.log[id];return;}
+  const pl=STORE.plans[c]||apercuPlan(c),b=(!jourMaison(c)?[]:journeeDe(c,pl)).find(x=>x.id===id);
+  if(b)j.log[id]={lib:(b.ico?b.ico+" ":"")+b.t.replace(/<[^>]+>/g,""),d:b.d,dom:domaineBloc(b),h:b.debut,det:b.items?b.items.map(it=>`${it.etape} : ${NOMK[it.m][it.key]} (${NOM_NIV[it.lvl]})`).join(" · "):b.jm?`Compétences : ${jmParId(b.jm).comp}.`:(b.x||"").replace(/<[^>]+>/g,"")};
+  if(b&&b.jm)j.log[id].jm=b.jm;
+}
+function logDuJour(c){
+  const j=STORE.jours[c];if(!j)return [];
+  const out=[];
+  for(const [id,ok] of Object.entries(j.fait||{})){if(!ok)continue;
+    let e=j.log&&j.log[id];
+    if(!e&&jourMaison(c)){const b=journeeDe(c,STORE.plans[c]||apercuPlan(c)).find(x=>x.id===id);if(b)e={lib:(b.ico?b.ico+" ":"")+b.t,d:b.d,dom:domaineBloc(b),h:b.debut,det:"",jm:b.jm};}
+    if(e)out.push({id,...e});}
+  return out.sort((a,b)=>(a.h||0)-(b.h||0));
+}
+function joursPeriode(deb,fin){const out=[];const x=jourDe(deb),f=jourDe(fin);while(x<=f){out.push(dateCle(x));x.setDate(x.getDate()+1);}return out;}
+function premierJour(){const ts=[...SUIVI.seances.map(s=>s.t),...Object.values(SUIVI.res).flat().map(x=>x.t)];const js=Object.keys(STORE.jours).filter(c=>logDuJour(c).length);const d=[...ts.map(t=>dateCle(new Date(t))),...js].sort()[0];return d||auj();}
+
+function htmlCarnet(deb,fin){
+  const p=prenomActif(),dates=joursPeriode(deb,fin);
+  const bilansDu=c=>{const l=[];for(const [id,h] of Object.entries(SUIVI.res)){const [m,k]=id.split(":");h.forEach(x=>{if(dateCle(new Date(x.t))===c)l.push({...x,m,k});});}return l.sort((a,b)=>a.t-b.t);};
+  const jours=dates.map(c=>({c,log:logDuJour(c),ses:seancesDu(c),bil:bilansDu(c),flu:SUIVI.flu.filter(x=>dateCle(new Date(x.t))===c),jx:(SUIVI.jeux||[]).filter(x=>x.r&&dateCle(new Date(x.t))===c),obs:(STORE.jours[c]&&STORE.jours[c].obs)||""})).filter(j=>j.log.length||j.ses.length||j.bil.length||j.obs);
+  const parDom={};let total=0;
+  jours.forEach(j=>{const vus=new Set();j.log.forEach(e=>{parDom[e.dom]=(parDom[e.dom]||0)+e.d;total+=e.d;vus.add(e.id);});
+    if(!vus.has("fr")&&!vus.has("maths"))j.ses.forEach(s=>{parDom[s.m]=(parDom[s.m]||0)+s.min;total+=s.min;});});
+  const d0=jourDe(deb),d1=jourDe(fin),nInstr=jours.filter(j=>jourMaison(j.c)||j.ses.length||j.bil.length).length,nEcole=dates.filter(c=>c<=auj()&&typeJour(c)==="ecole").length;
+  const parties={};jours.forEach(j=>j.log.forEach(e=>{if(e.jm)parties[e.jm]=(parties[e.jm]||0)+1;}));
+  let h=`<header class="imphead"><h1>Carnet de bord de l'instruction en famille</h1><p>${p?`Enfant : <b>${esc(p)}</b> · `:""}niveau de travail : ${nomNiveau(niveau)} · période du ${d0.getDate()} ${MOIS[d0.getMonth()]} ${d0.getFullYear()} au ${d1.getDate()} ${MOIS[d1.getMonth()]} ${d1.getFullYear()}</p></header>`;
+
+  h+=`<h2>1. Bilan chiffré de la période</h2><div class="impchiffres"><div><b>${nInstr}</b> jours d'instruction${jours.length>nInstr?` <small>(+ ${jours.length-nInstr} jour${jours.length-nInstr>1?"s":""} de jeux en famille)</small>`:""}</div>${nEcole?`<div><b>${nEcole}</b> jour${nEcole>1?"s":""} à l'école</div>`:""}<div><b>${duree(total)}</b> d'activités réalisées</div><div><b>${SUIVI.seances.filter(s=>dates.includes(dateCle(new Date(s.t)))).length}</b> séances guidées</div><div><b>${jours.reduce((a,j)=>a+j.bil.length,0)}</b> bilans d'exercices</div></div>`;
+  h+=`<table class="imptab"><thead><tr><th>Domaine d'enseignement</th><th>Temps réalisé</th><th>Part</th></tr></thead><tbody>${Object.keys(DOMAINES).filter(k=>parDom[k]).map(k=>`<tr><td>${DOMAINES[k]}</td><td class="nw">${duree(parDom[k])}</td><td class="nw">${Math.round(parDom[k]/total*100)} %</td></tr>`).join("")||`<tr><td colspan="3" class="gris">Aucune activité cochée sur la période.</td></tr>`}</tbody></table>`;
+
+  h+=`<h2>2. Organisation et méthode</h2>`;
+  const st=REG.semType,lib={complet:"journée complète",matin:"matin",court:"séance courte (1 h)",ecole:"à l'école",off:"repos"};
+  h+=`<p><b>Emploi du temps type :</b> ${[1,2,3,4,5,6,0].map(w=>`${JOURS[w]} : ${lib[st[w][0]]}${maisonT(st[w][0])?` à partir de ${hmin(enMin(st[w][1]))}`:""}`).join(" ; ")}.</p>`;
+  h+=`<ul class="impul">
+   <li><b>Journée type</b> : rituel du matin (date, calendrier, calcul mental oral), séance guidée de français puis de mathématiques (environ ${REG.dur} minutes chacune), pause, lecture plaisir, écriture, puis activités de découverte du monde, arts, sport et langue vivante selon les jours.</li>
+   <li><b>Séances guidées</b> en trois temps : échauffement facile, notion du jour, fin sur une réussite. Les exercices sont générés selon le programme du cycle 2 (cycle des apprentissages fondamentaux) et adaptés au niveau de l'enfant.</li>
+   <li><b>Programmation</b> : chaque semaine, les notions sont réparties sur les jours d'instruction, en priorité celles qui posent difficulté, puis dans l'ordre du programme. Chaque notion revient en révision deux jours plus tard (révision espacée).</li>
+   <li><b>Différenciation</b> : quand une notion n'est pas maîtrisée, l'exercice redescend d'un niveau (jusqu'aux attendus du CP, où l'ordre d'étude des sons suit la progression des cours du CNED) ; il remonte après une réussite autonome.</li>
+   <li><b>Manipulation et jeu</b> : objets (coquillages, dés, pièces), jeux de société de la famille et jeux éducatifs en ligne (logicieleducatif.fr) pour consolider les notions. Le jeu de société de la journée est choisi selon les notions à retravailler ; pendant la partie, l'enfant explique ses coups, compte et décrit à voix haute.</li>
+   <li><b>Évaluation</b> : après chaque exercice, y compris sur papier, le parent note le degré d'autonomie : ${ECH.map(([r,ic,t])=>`${ic} ${t.toLowerCase()}`).join(", ")}. Une notion est considérée acquise quand elle est réussie seule à son niveau. La fluence de lecture est mesurée en mots lus par minute.</li></ul>`;
+
+  h+=`<h3>Jeux de société utilisés et intérêt pédagogique</h3>${tableJeuxHtml(parties)}<p class="impnote">Parties : nombre de parties notées sur la période.</p>`;
+  h+=`<h2>3. Programme travaillé et acquisitions</h2>`;
+  for(const m of ["maths","fr"]){const ks=FICHES[m][niveau];const c={ret:0,cours:0,nv:0,acq:0};ks.forEach(k=>c[statutNotion(m,k)]++);
+    h+=`<h3>${m==="maths"?"Mathématiques":"Français"} · ${c.acq} notions acquises, ${c.cours} en cours, ${c.ret} à retravailler, ${c.nv} pas encore abordées (sur ${ks.length})</h3>`;
+    const L=Object.keys(NOMK[m]).filter(k=>hist(m,k).some(x=>dates.includes(dateCle(new Date(x.t)))));
+    h+=L.length?`<table class="imptab"><thead><tr><th>Notion</th><th>Travaillée le</th><th>Premier bilan</th><th>Dernier bilan</th><th>État</th></tr></thead><tbody>${L.map(k=>{const hh=hist(m,k).filter(x=>dates.includes(dateCle(new Date(x.t)))),a=hh[0],z=hh[hh.length-1],s=statutNotion(m,k);
+      return `<tr><td>${NOMK[m][k]}</td><td>${[...new Set(hh.map(x=>dCourte(x.t)))].join(", ")}</td><td class="nw">${emo(a.r)} ${LIBC[norm(a.r)]} <small>(${NOM_NIV[a.lvl]})</small></td><td class="nw">${emo(z.r)} ${LIBC[norm(z.r)]} <small>(${NOM_NIV[z.lvl]})</small></td><td class="nw">${STAT[s][1]} ${STAT[s][0]}</td></tr>`;}).join("")}</tbody></table>`:`<p class="gris">Pas de bilan sur la période.</p>`;}
+  const autres={};jours.forEach(j=>j.log.forEach(e=>{if(["monde","arts","eps","lv","emc"].includes(e.dom))(autres[e.dom]=autres[e.dom]||[]).push(`${dCourte(jourDe(j.c))} : ${e.lib.replace(/^\S+\s/,"")}`);}));
+  if(Object.keys(autres).length)h+=`<h3>Autres domaines</h3><ul class="impul">${Object.entries(autres).map(([d,l])=>`<li><b>${DOMAINES[d]}</b> : ${l.join(" ; ")}</li>`).join("")}</ul>`;
+  const flu=SUIVI.flu.filter(x=>dates.includes(dateCle(new Date(x.t))));
+  if(flu.length)h+=`<h3>Fluence de lecture (mots lus en une minute)</h3><p>${flu.map(x=>`${dCourte(x.t)} : <b>${x.score}</b>`).join(" → ")}${flu.length>1?` · évolution : ${flu[flu.length-1].score-flu[0].score>=0?"+":""}${flu[flu.length-1].score-flu[0].score} mots/min`:""}</p>`;
+
+  h+=`<h2>4. Journal jour par jour</h2>`;
+  if(!jours.length)h+=`<p class="gris">Aucune activité enregistrée sur la période. Coche « Fait » dans « Ma journée » pour alimenter ce journal.</p>`;
+  jours.forEach(j=>{const tot=j.log.reduce((a,e)=>a+e.d,0)||j.ses.reduce((a,s)=>a+s.min,0);
+    h+=`<section class="impjour"><h3>${dLongue(j.c)} · ${duree(tot)} d'activités</h3><table class="imptab"><tbody>`;
+    j.log.forEach(e=>{h+=`<tr><td class="nw">${e.h!==undefined?hmin(e.h):""}</td><td><b>${esc(e.lib)}</b> <small>(${e.d} min · ${DOMAINES[e.dom].split(" (")[0]})</small>${e.det?`<br><small>${esc(e.det)}</small>`:""}</td></tr>`;});
+    if(j.bil.length)h+=`<tr><td class="nw">Bilans</td><td>${j.bil.map(x=>`${NOMK[x.m]&&NOMK[x.m][x.k]||x.k} : ${x.src==="jeu"?"🎮 ":""}${emo(x.r)} ${LIBC[norm(x.r)]} <small>(${NOM_NIV[x.lvl]})</small>`).join(" · ")}</td></tr>`;
+    if(j.jx.length)h+=`<tr><td class="nw">Jeux en ligne</td><td>${j.jx.map(x=>esc(x.titre)).join(" · ")}</td></tr>`;
+    if(j.flu.length)h+=`<tr><td class="nw">Lecture</td><td>${j.flu.map(x=>x.score+" mots lus en une minute").join(" · ")}</td></tr>`;
+    if(j.obs)h+=`<tr><td class="nw">Observations</td><td>${esc(j.obs).replace(/\n/g,"<br>")}</td></tr>`;
+    h+=`</tbody></table></section>`;});
+
+  h+=`<h2>5. Pièces à joindre</h2><ul class="impul"><li>Cahiers et fiches d'exercices datés (fiches imprimées depuis l'application).</li><li>Productions écrites de l'enfant (journal, lettres, histoires).</li><li>Liste des livres lus et des sorties réalisées.</li><li>Photos des manipulations, expériences et réalisations artistiques.</li><li>Ce carnet de bord et l'historique des progrès.</li></ul>`;
+  h+=`<p class="impsign">Fait à ____________________, le ____________________ · Signature du ou des responsables : ______________________________</p>`;
+  return h;
+}
+function ouvrirCarnet(){
+  const deb=premierJour();
+  ouvrirDialog("📒 Carnet de bord",`<p>Un document détaillé de tout ce qui a été fait : temps par domaine d'enseignement, méthode, notions travaillées et acquises, journal jour par jour avec tes observations. Utile pour un contrôle de l'instruction en famille.</p>
+   <p class="semact"><label>Du <input type="date" id="cbDeb" value="${deb}"></label><label>au <input type="date" id="cbFin" value="${auj()}"></label></p>
+   <p class="semact"><button class="o-btn" data-cbp="7">7 derniers jours</button><button class="o-btn" data-cbp="30">30 derniers jours</button><button class="o-btn" data-cbp="0">Depuis le début</button></p>
+   <p><button id="cbImp">🖨 Imprimer le carnet de bord</button></p>
+   <p class="mat">Pour qu'il soit complet : coche « Fait » pour chaque activité dans « Ma journée », note les bilans après chaque exercice, et ajoute tes observations du jour (sorties, lectures, travaux réalisés).</p>`);
+  document.getElementById("boitec").onclick=ev=>{const b=ev.target.closest("button");if(!b)return;
+    if(b.dataset.cbp!==undefined){const n=+b.dataset.cbp,x=new Date();if(n){x.setDate(x.getDate()-n+1);document.getElementById("cbDeb").value=dateCle(x);}else document.getElementById("cbDeb").value=premierJour();document.getElementById("cbFin").value=auj();}
+    if(b.id==="cbImp"){let d=document.getElementById("cbDeb").value,f=document.getElementById("cbFin").value;if(!d||!f)return;if(d>f)[d,f]=[f,d];document.getElementById("boite").close();
+      imprimerContenu("Carnet de bord",htmlCarnet(d,f),false,"carnet-de-bord-"+((prenomActif()||"enfant").toLowerCase().normalize("NFD").replace(/[^a-z0-9]/g,""))+"-"+d+"-"+f);}};
+}
+document.getElementById("btnCarnet").onclick=ouvrirCarnet;
+
+/* ================= NOS JEUX DE SOCIÉTÉ (ceux de la maison) ================= */
+const JEUX_MAISON=[
+ {id:"6qp",nom:"6 qui prend !",ico:"🐮",min:20,dom:"maths",
+  comp:"lire, comparer et ranger des nombres jusqu'à 104 ; trouver le nombre le plus proche ; additionner les têtes de bœuf",
+  prog:"Nombres et calcul : comparer, ranger, encadrer les nombres ; calcul mental",
+  n:[["maths","Compare"],["maths","Complete"],["maths","Droite"],["maths","Calcul"],["maths","Ecris"]],
+  comment:"Elle dit à voix haute où va sa carte et pourquoi : « 47 va après 45, c'est le plus proche ». À la fin de la manche, elle additionne elle-même ses têtes de bœuf.",
+  t:{"maths:Compare":"chaque carte posée se compare aux bouts des rangées : « 58 est plus grand que 52 mais plus petit que 61 ».","maths:Droite":"les rangées de cartes, c'est une droite graduée : demande-lui entre quelles cartes un nombre se placerait.","maths:Calcul":"le total des têtes de bœuf en fin de manche, c'est du calcul mental pour de vrai."},
+  adapt:"Pour commencer : cartes posées visibles devant soi, et seulement les cartes de 1 à 50 (de 1 à 30 si c'est encore difficile)."},
+ {id:"trio",nom:"Trio",ico:"🃏",min:15,dom:"maths",
+  comp:"mémoire de travail, raisonnement logique (déduire où sont les cartes), plus petit et plus grand, nombres de 1 à 12",
+  prog:"Nombres et calcul : comparer ; résoudre des problèmes ; mémoriser des faits numériques",
+  n:[["maths","Compare"],["maths","Calcul"],["maths","Mult"]],
+  comment:"Quand elle demande « ta plus petite carte » ou « ta plus grande », elle explique son choix. Tu peux réfléchir à voix haute pour lui montrer comment on se souvient des cartes déjà vues.",
+  t:{"maths:Mult":"un trio de 4, c'est 4 + 4 + 4 = 12, donc 3 fois 4 : à la fin, elle calcule la valeur de ses trios.","maths:Calcul":"à la fin, chacun additionne les nombres de ses trios."},
+  adapt:"Pour commencer : à 3 joueurs, en retirant les cartes 10, 11 et 12."},
+ {id:"duck",nom:"Duck & Cover",ico:"🦆",min:20,dom:"maths",
+  comp:"se repérer dans une grille (à côté, au-dessus, en dessous), reconnaître les nombres annoncés, additionner les points",
+  prog:"Espace et géométrie : se repérer, décrire des positions ; Nombres et calcul : calcul mental",
+  n:[["maths","Geometrie"],["maths","Calcul"]],
+  comment:"Elle décrit chaque déplacement avec les mots de position : « je mets mon canard à droite du 7 ». À la fin, elle compte elle-même ses points.",
+  adapt:"Pour commencer : jouer lentement, à 2 ou 3, en l'aidant à vérifier les cases voisines."},
+ {id:"echecs",nom:"Échecs",ico:"♟️",min:20,dom:"maths",
+  comp:"se repérer sur un quadrillage avec une lettre et un chiffre (c3, e5), anticiper, raisonner, se concentrer, respecter les règles et savoir perdre",
+  prog:"Espace et géométrie : repérer une case dans un quadrillage ; EMC : respecter les règles, maîtrise de soi",
+  n:[["maths","Geometrie"]],
+  comment:"Avant de jouer, elle annonce la case d'arrivée : « mon cavalier va en c3 ». Après la partie, on se serre la main, qu'on ait gagné ou perdu.",
+  adapt:"Pour débuter : la bataille de pions (seulement les pions, le premier qui arrive de l'autre côté gagne), puis on ajoute une pièce à la fois."},
+ {id:"7fam",nom:"Jeu de 7 familles",ico:"👪",min:15,dom:"fr",
+  comp:"classer, catégoriser ; formuler une demande complète et polie ; lire les noms sur les cartes ; mémoire",
+  prog:"Français : langage oral (formuler une demande), lecture, étude de la langue (classer, familles de mots)",
+  n:[["fr","Familles"],["fr","Son"],["fr","Lis"]],
+  comment:"Exige la phrase complète : « Dans la famille Pêcheur, je voudrais le grand-père, s'il te plaît. » C'est elle qui lit les noms sur les cartes.",
+  t:{"fr:Son":"fabriquez ensemble un jeu de 7 familles de sons (ou, on, an, oi, ch, in, gn) : 6 mots par famille, qu'elle écrit et dessine. C'est un vrai travail d'écriture, et ensuite on y joue.","fr:Familles":"fabriquez des familles de mots (dent, dentiste, dentifrice…) : on demande « dans la famille dent, je voudrais… »."},
+  adapt:"Pour commencer : jouer à 3, cartes d'une même famille posées de côté au fur et à mesure pour l'aider à se souvenir."},
+ {id:"twin",nom:"Twin It!",ico:"👯",min:10,dom:"emc",
+  comp:"discrimination visuelle (repérer deux cartes identiques parmi des cartes qui se ressemblent), attention, vocabulaire des couleurs, formes et positions",
+  prog:"Langage oral : décrire précisément ; Lecture : discrimination visuelle (utile pour b/d, p/q) ; Espace : positions",
+  n:[["maths","Geometrie"],["fr","Lis"]],
+  comment:"Avant de prendre une paire, elle la décrit : « un rond jaune en haut à gauche, une étoile bleue au milieu ».",
+  adapt:"Pour commencer : moins de cartes étalées, sans se presser."},
+ {id:"sabot",nom:"Le Saboteur",ico:"⛏️",min:25,dom:"emc",
+  comp:"construire un chemin sur un quadrillage (orientation, continuité), déduire qui est le saboteur, argumenter à l'oral, coopérer, accepter de perdre",
+  prog:"EMC : coopérer, argumenter, respecter les règles ; Espace et géométrie : se repérer, construire un chemin",
+  n:[["maths","Geometrie"]],
+  comment:"Quand quelqu'un est soupçonné, chacun donne une raison : « Je pense que c'est toi parce que… ». Elle explique où elle pose son chemin et pourquoi.",
+  adapt:"Jeu plutôt pour les plus grands : pour commencer, une manche où tout le monde est mineur (coopératif), puis on ajoute le saboteur."},
+ {id:"jungle",nom:"Jungle Speed",ico:"🪵",min:10,dom:"fr",
+  comp:"discrimination visuelle fine (formes très proches, couleurs trompeuses), attention, contrôle de soi (ne pas attraper le totem trop vite)",
+  prog:"Lecture : distinguer des formes proches (comme b/d, p/q) ; EMC : maîtrise de soi",
+  n:[["fr","Son"],["fr","Lis"]],
+  comment:"Elle nomme la forme quand elle attrape le totem. Pas plus de 10 minutes : ça excite, à garder pour la fin de journée plutôt qu'avant une séance.",
+  t:{"fr:Son":"variante maison : des cartes avec des lettres et des syllabes qui se ressemblent (b/d, p/q, ou/on, an/en). On attrape le totem quand deux cartes font le même son."},
+  adapt:"On attrape le totem sans taper. Pour commencer, à 2 et doucement."},
+ {id:"bourri",nom:"Le Petit Bourricot",ico:"🐴",min:10,dom:"maths",
+  comp:"précision du geste et motricité fine (utile pour tenir le crayon), dénombrer les objets posés, attendre son tour et garder son calme quand l'âne rue",
+  prog:"Nombres et calcul : dénombrer, associer un nombre à une quantité, ajouter ; EPS : motricité fine ; EMC : respecter son tour",
+  n:[["maths","Ecris"],["maths","Calcul"]],
+  comment:"Variante avec un dé : on lance le dé et on pose autant d'objets sur l'âne. Elle compte à voix haute et dit combien il y en a en tout après sa pose.",
+  t:{"maths:Ecris":"avec un dé : elle pose autant d'objets que le dé l'indique, puis écrit le total sur une ardoise.","maths:Calcul":"avant chaque pose, elle annonce le total : « il y en a 4, j'en pose 2, ça fait 6 »."},
+  adapt:"Poser les objets avec le pouce et l'index seulement (la « pince »), comme pour tenir le crayon. Pour les plus petits nombres, un dé de 1 à 3 (ou des points)."},
+ {id:"dobble",nom:"Dobble Stitch",ico:"🔵",min:10,dom:"fr",
+  comp:"trouver le seul symbole commun à deux cartes (attention, discrimination visuelle), nommer vite et juste (vocabulaire, aisance utile à la lecture fluide)",
+  prog:"Langage oral et vocabulaire ; Langue vivante : nommer en anglais",
+  n:[["fr","Fluence"],["fr","Lis"]],
+  comment:"Elle nomme le symbole avec précision avant de prendre la carte. Une manche en anglais : on dit les couleurs et les objets en anglais quand c'est possible.",
+  adapt:"Pour commencer : à 2, sans compter le temps, avec le mini-jeu le plus simple de la boîte."}
+];
+const jmParId=id=>JEUX_MAISON.find(g=>g.id===id);
+function scoreJeu(g){const w={ret:3,cours:2,nv:.6,acq:.3};
+  return g.n.reduce((s,[m,k])=>s+(FICHES[m][niveau].includes(k)?w[statutNotion(m,k)]:.5),0)/Math.sqrt(g.n.length);}
+function notionCible(g){const o={ret:0,cours:1,nv:2,acq:3};
+  const l=g.n.filter(([m,k])=>FICHES[m][niveau].includes(k)).map(([m,k])=>({m,k,s:statutNotion(m,k)})).sort((a,b)=>o[a.s]-o[b.s]);
+  return l[0]&&(l[0].s==="ret"||l[0].s==="cours")?l[0]:null;}
+const jmTries=()=>[...JEUX_MAISON].sort((a,b)=>scoreJeu(b)-scoreJeu(a));
+function jeuPourJour(c){
+  const j=STORE.jours[c];if(j&&j.jm&&jmParId(j.jm))return jmParId(j.jm);
+  const tri=jmTries().slice(0,4),g=tri[Math.round(jourDe(c)/864e5)%tri.length];
+  if(c===auj())jourEtat(c).jm=g.id;
+  return g;
+}
+function autreJeu(c){const tri=jmTries(),i=tri.findIndex(g=>g.id===jeuPourJour(c).id);jourEtat(c).jm=tri[(i+1)%tri.length].id;sauver();renderJournee();}
+function texteJeu(g){const nc=notionCible(g);
+  return `${nc?`🎯 Tombe bien : « ${NOMK[nc.m][nc.k]} » est ${nc.s==="ret"?"à retravailler":"en cours"}. `:""}Elle y travaille : ${g.comp}. ${nc&&g.t&&g.t[nc.m+":"+nc.k]?MAJ(g.t[nc.m+":"+nc.k]):g.comment}`;}
+function blocJeu(c,d){const g=jeuPourJour(c);
+  return {id:"jeu",d:Math.max(d,g.min),ico:"🎲",t:"Jeu de société : "+g.nom,x:texteJeu(g)+` <button class="o-btn lienjm" data-jmfiche="${g.id}">ℹ️ Pourquoi ce jeu</button>`,cat:"jm",dom:g.dom,jm:g.id};}
+
+/* Le soir ou le week-end (jours à l'école ou de repos) */
+function jeuSoirHtml(c){
+  if(c>auj())return "";
+  const j=jourEtat(c),g=j.log&&j.log.jeuSoir&&j.log.jeuSoir.jm&&jmParId(j.log.jeuSoir.jm)||jeuPourJour(c),fait=!!(j.fait&&j.fait.jeuSoir);
+  return `<div class="bloc jmsoir ${fait?"fait":""}"><div class="heure">🎲<small>${g.min} min</small></div><div class="corps"><b>${g.ico} En famille, si elle en a envie : ${g.nom}</b><p>${texteJeu(g)}</p><div class="bact">${fait?"":`<button class="o-btn" data-autre="jm">🔄 Autre jeu</button>`}<button class="o-btn lienjm" data-jmfiche="${g.id}">ℹ️ Pourquoi ce jeu</button><label class="coche"><input type="checkbox" data-jmsoir="${g.id}" ${fait?"checked":""}> On y a joué</label></div></div></div>`;
+}
+function noterPartie(c,g,id){
+  const j=jourEtat(c);j.fait=j.fait||{};j.log=j.log||{};j.fait[id]=true;
+  j.log[id]={lib:`🎲 Jeu de société : ${g.nom}`,d:g.min,dom:g.dom,h:undefined,det:`Compétences : ${g.comp}.`,jm:g.id};
+}
+document.getElementById("journee").addEventListener("change",ev=>{
+  const x=ev.target;if(!x.dataset.jmsoir)return;const c=JOUR_VU||auj(),g=jmParId(x.dataset.jmsoir),j=jourEtat(c);
+  if(x.checked){noterPartie(c,g,"jeuSoir");sauver();renderJournee();gagner(2,`🎲 Bravo pour la partie de ${g.nom} !`);}
+  else{if(j.fait)delete j.fait.jeuSoir;if(j.log)delete j.log.jeuSoir;sauver();renderJournee();}
+});
+document.addEventListener("click",ev=>{const a=ev.target.closest('#journee [data-autre="jm"]');if(a){ev.stopPropagation();autreJeu(JOUR_VU||auj());return;}
+  const b=ev.target.closest("[data-jmfiche]");if(!b)return;ev.preventDefault();ev.stopPropagation();ouvrirJeuxMaison(b.dataset.jmfiche);},true);
+
+/* Dans « Idée de jeu » (exercices et notions) : ce que leurs propres jeux apportent */
+function avecVosJeux(m,k){
+  const l=JEUX_MAISON.filter(g=>g.n.some(([mm,kk])=>mm===m&&kk===k));if(!l.length)return "";
+  return `<div class="jmaison"><p><b>🏠 Avec vos jeux de société</b></p>${l.map(g=>`<p>${g.ico} <b>${g.nom}</b> : ${g.t&&g.t[m+":"+k]?g.t[m+":"+k]:g.comment}</p>`).join("")}</div>`;
+}
+for(const m of ["maths","fr"]){const keys=new Set([...Object.keys(JEUX[m]),...JEUX_MAISON.flatMap(g=>g.n.filter(x=>x[0]===m).map(x=>x[1]))]);
+  keys.forEach(k=>{if(!JEUX_MAISON.some(g=>g.n.some(([mm,kk])=>mm===m&&kk===k)))return;const f=JEUX[m][k];JEUX[m][k]=l=>(f?f(l):"")+avecVosJeux(m,k);});}
+
+/* Fiche « Nos jeux de société » */
+function ouvrirJeuxMaison(focus){
+  const c=auj(),tri=jmTries(),cons=tri.slice(0,3).map(g=>g.id),j=STORE.jours[c];
+  const deja=id=>!!(j&&j.fait&&j.log&&Object.keys(j.log).some(k=>j.fait[k]&&j.log[k].jm===id));
+  const carte=g=>{const nc=notionCible(g);return `<div class="jmcarte ${g.id===focus?"focus":""}" id="jm-${g.id}"><p class="jmt">${g.ico} <b>${g.nom}</b> <small>· ${g.min} min${cons.includes(g.id)?" · ⭐ conseillé en ce moment":""}</small></p>
+    <p><b>Ce qu'elle travaille</b> : ${g.comp}.</p><p><b>Lien avec le programme</b> : ${g.prog}.</p>${nc?`<p>🎯 Utile maintenant : « ${NOMK[nc.m][nc.k]} » est ${nc.s==="ret"?"à retravailler":"en cours"}.</p>`:""}
+    <p><b>Pour en faire un moment d'apprentissage</b> : ${g.comment}</p>${g.t?Object.entries(g.t).map(([mk,x])=>{const [m,k]=mk.split(":");return `<p class="mat">${NOMK[m][k]} : ${x}</p>`;}).join(""):""}
+    <p class="mat">Pour adapter : ${g.adapt}</p>
+    <p>${deja(g.id)?"✅ Partie notée aujourd'hui":`<button class="o-btn" data-jmjoue="${g.id}">✔ On y a joué aujourd'hui</button>`}</p></div>`;};
+  ouvrirDialog("🎲 Nos jeux de société",`<p>Vos jeux de la maison et ce qu'ils font travailler. L'application en propose un dans la journée, choisi d'après les notions à retravailler, et un le soir les jours d'école ou de repos. Chaque partie notée va dans le carnet de bord.</p>
+   <p class="mat">Le bon réflexe : faire parler pendant le jeu (expliquer son coup, compter à voix haute, décrire). C'est ce qui transforme une partie en apprentissage.</p>${tri.map(carte).join("")}`);
+  const z=document.getElementById("boitec");
+  z.onclick=ev=>{const b=ev.target.closest("[data-jmjoue]");if(!b)return;const g=jmParId(b.dataset.jmjoue);
+    noterPartie(c,g,"jm-"+g.id);sauver();if(onglet==="jour")renderJournee();b.outerHTML="✅ Partie notée aujourd'hui";gagner(2,`🎲 Bravo pour la partie de ${g.nom} !`);};
+  if(focus){const e=document.getElementById("jm-"+focus);if(e)setTimeout(()=>e.scrollIntoView({block:"start"}),50);}
+}
+document.getElementById("btnJeuxM").onclick=()=>ouvrirJeuxMaison();
+
+/* Tableau pour le carnet de bord et « Ce que couvre l'application » */
+function tableJeuxHtml(parties){
+  return `<table class="imptab"><thead><tr><th>Jeu</th><th>Compétences travaillées</th><th>Lien avec le programme (cycle 2)</th>${parties?"<th>Parties</th>":""}</tr></thead><tbody>${JEUX_MAISON.map(g=>`<tr><td class="nw">${g.ico} ${g.nom}</td><td>${MAJ(g.comp)}</td><td>${g.prog}</td>${parties?`<td class="nw">${parties[g.id]||0}</td>`:""}</tr>`).join("")}</tbody></table>`;
+}
+(()=>{const b=document.getElementById("btnProg"),orig=b.onclick;b.onclick=()=>{orig();document.getElementById("boitec").insertAdjacentHTML("beforeend",`<h3>🎲 Vos jeux de société</h3><p>Ils complètent les exercices : l'application les propose selon les notions à retravailler.</p>${tableJeuxHtml()}`);};})();
+
+/* ================= PROGRESSION DU CP : ORDRE DES SONS CALÉ SUR LES COURS DU CNED (modules 1 à 4) =================
+   Seul l'ordre d'étude des sons et des notions est repris ; les mots et les exercices sont propres à l'application. */
+const CP_PROG=[
+ {niv:-2,per:"CP · début d'année (≈ modules 1 et 2 du CNED)",sons:["a","é","i","o","u","l","r","f","j","ou","e","eu","v","ch","p","t"],motsOutils:["un","est","et"]},
+ {niv:-1,per:"CP · milieu d'année (≈ modules 3 et 4 du CNED)",sons:["b","d","m","n","gn","z","s / ss","oi","on / om","c","g / gu","au / eau","an / am","k / qu","en / em"],motsOutils:["des","les","avec"]},
+ {niv:0,per:"CP · fin d'année (après le module 4)",sons:["in / ain","è / ai / ê","er / ez","ill / eil","oin","ien","ph","ç","ge / gi","x"],motsOutils:["dans","pour","sur"]}
+];
+/* Entends-tu le son ? Mots avec / sans le son (listes vérifiées une à une) */
+const CP_ENTENDS={
+ a:[["rat","sac","ami","lama"],["lit","moto","lune","vélo"]],
+ é:[["vélo","fée","café","épée"],["lit","moto","sac","lune"]],
+ i:[["lit","riz","nid","tapis"],["sac","moto","lune","robe"]],
+ o:[["moto","robe","domino","lavabo"],["lit","lune","sac","fée"]],
+ u:[["lune","mur","jupe","tortue"],["lit","moto","sac","fée"]],
+ l:[["lune","lit","lama","vélo"],["rat","moto","sac","jupe"]],
+ r:[["rat","riz","robe","mur"],["lune","lit","moto","sac"]],
+ f:[["fée","café","sofa","girafe"],["lune","moto","rat","sac"]],
+ j:[["judo","jupe","jaune","pyjama"],["lune","moto","rat","sac"]],
+ ou:[["loup","roue","poule","four"],["lune","moto","lit","sac"]],
+ e:[["cerise","renard","petit","cheval"],["lit","moto","sac","vélo"]],
+ eu:[["feu","bleu","jeu","deux"],["lit","moto","sac","vélo"]],
+ v:[["vélo","lavabo","cheval","vache"],["lit","moto","sac","lune"]],
+ ch:[["chat","niche","vache","chocolat"],["lit","moto","sac","lune"]],
+ p:[["papa","pomme","soupe","lapin"],["lit","moto","sac","lune"]],
+ t:[["tomate","tapis","tortue","patte"],["lune","vélo","sac","robe"]]
+};
+const CP_MANQUE={
+ [-1]:[["un __ateau","b / d","bateau"],["un __omino","b / d","domino"],["une ro__e","b / d","robe"],["un ra__is","b / d","radis"],
+   ["un __uage","m / n","nuage"],["une to__ate","m / n","tomate"],["une po__me","m / n","pomme"],["un ana__as","m / n","ananas"],
+   ["un champi__on","gn / n","champignon"],["un __èbre","z / s","zèbre"],["un __erpent","s / z","serpent"],["un poi__on","ss / s","poisson"],
+   ["un r__","oi / ou","roi"],["une ét__le","oi / ou","étoile"],["un ball__","on / an","ballon"],["un c__chon","o / on","cochon"],
+   ["un __anard","c / g","canard"],["une __are","g / c","gare"],["une __itare","gu / g","guitare"],["un chap__","eau / ou","chapeau"],
+   ["une __to","au / ou","auto"],["une or__ge","an / on","orange"],["une l__pe","am / an","lampe"],["une __ille","qu / g","quille"],
+   ["une d__t","en / on","dent"],["le v__t","en / in","vent"]],
+ 0:[["un lap__","in / an","lapin"],["la m__","ain / in","main"],["un s__ge","in / an","singe"],["un jard__","in / on","jardin"],
+   ["une fr__se","ai / é","fraise"],["une f__te","ê / é","fête"],["le n__","ez / eu","nez"],["un boulang__","er / eur","boulanger"],
+   ["une chen__e","ill / l","chenille"],["le sol__l","ei / è","soleil"],["c'est l__","oin / on","loin"],["un ch__","ien / in","chien"],
+   ["un élé__ant","ph / p","éléphant"],["un gar__on","ç / s","garçon"],["une __irafe","g / j","girafe"],["un ta__i","x / s","taxi"]]
+};
+Fr.Son[-2]=()=>Math.random()<.5?
+  E("Entends-tu le son ?",pickN(Object.keys(CP_ENTENDS),6).map(s=>{const oui=Math.random()<.5,m=pick(CP_ENTENDS[s][oui?0:1]);return {q:`<b>${m}</b> : « ${s} » ?`,r:oui?"oui":"non"};}),{cls:"c2",note:"Lis le mot à voix haute, en articulant. Elle répond oui ou non (pouce en l'air ou en bas).",aide:"Dis le mot tout doucement, en étirant les sons."})
+ :E("Combien de syllabes ?",pickN([["chat",1],["moto",2],["vélo",2],["tomate",3],["domino",3],["ananas",3],["lapin",2],["papillon",3],["sac",1],["salade",3],["lit",1],["banane",3]],6).map(([m,n])=>({q:m+" :",r:n})),{cls:"c2",note:"Lis le mot à voix haute. Elle tape dans ses mains à chaque syllabe."});
+Fr.Son[-1]=()=>E("Le son qui manque",pickN(CP_MANQUE[-1],6).map(([q,o,r])=>({q:`${q} <small>(${o})</small>`,r})),{cls:"c2",aide:"Dis le mot lentement : quel son entends-tu à l'endroit du trou ?"});
+Fr.Son[0]=()=>E("Le son qui manque",pickN(CP_MANQUE[0],6).map(([q,o,r])=>({q:`${q} <small>(${o})</small>`,r})),{cls:"c2",aide:"Dis le mot lentement. Si deux écritures font le même son, pense au mot que tu as déjà vu écrit."});
+Fr.Dictee[-2]=()=>E("Dictée de sons",pickN(["a","é","i","o","u","l","r","f","j","ou","v","ch","p","t","eu"],6).map((m,i)=>({q:`${i+1} :`,r:m})),{cls:"c2",parent:"Dis le son en l'étirant : « llll », « ffff », « ou ». Appuie sur « Mots à dicter » pour les voir.",aide:"Écoute bien le son, puis écris la lettre."});
+Fr.Dictee[-1]=()=>E("Dictée de syllabes et petits mots",[...pickN(["la","ri","fo","ju","vou","cha","pé","tu","ba","do","mi","nu","sa","zo","fou","lé"],4),...pickN(["un","et","est","des","les","avec"],2)].map((m,i)=>({q:`${i+1} :`,r:m})),{cls:"c2",parent:"Les deux derniers sont des mots-outils : ils s'apprennent par cœur. Appuie sur « Mots à dicter » pour les voir."});
+Fr.Dictee[0]=()=>E("Dictée de mots",[...pickN(["papa","moto","lune","ami","vélo","rat","lit","sac","robe","mur","bateau","maison","bonbon","mouton","lampe","dent","chapeau","gâteau"],4),...pickN(["dans","pour","sur","avec","les","des"],2)].map((m,i)=>({q:`Mot ${i+1} :`,r:m})),{cls:"c2",parent:"Appuie sur « Mots à dicter » pour les voir. Les deux derniers sont des mots-outils.",aide:"Dis le mot tout bas en l'écrivant, son par son."});
+Fr.Lis[-2]=()=>E("Lis le mot, choisis l'image",pickN([["lune","🌙","🚲"],["vélo","🚲","🛏️"],["lit","🛏️","🌙"],["loup","🐺","🔥"],["feu","🔥","🐺"],["rat","🐀","🌙"],["chat","🐱","🔥"],["vache","🐄","🐱"],["poule","🐔","🐄"]],4).map(([m,a,b])=>({q:`${m} : ${Math.random()<.5?a+" ou "+b:b+" ou "+a}`,r:a})),{cls:"c2",note:"Elle lit le mot et montre l'image. Ces mots n'utilisent que les sons du début du CP."});
+M.Calcul[0]=()=>{const c=uniq(2,()=>R(1,9)),d=R(2,10),mo=R(1,10)*2,p=R(11,49),z=pick([12,14,16,17,23,25,28,31,36]);
+  return E("Calcul mental",shuffle([...c.map(x=>({q:`${x} + … = 10`,r:10-x})),{q:`Double de ${d} =`,r:2*d},{q:`Moitié de ${mo} =`,r:mo/2},{q:`${p} + 10 =`,r:p+10},{q:`${z} + … = ${Math.ceil(z/10)*10}`,r:Math.ceil(z/10)*10-z}]),{cls:"c2",aide:"Pour faire 10 : utilise tes 10 doigts. + 10 : le chiffre des dizaines avance de 1. Pour aller à la dizaine : 16 + 4 = 20, comme 6 + 4 = 10."});};
+
+function progCPHtml(){return `<table class="couv">${CP_PROG.map(p=>`<tr><td><b>${p.per}</b><br>Sons : ${p.sons.join(", ")}<br><small>Mots-outils : ${p.motsOutils.join(", ")}</small></td></tr>`).join("")}</table>`;}
+(()=>{const b=document.getElementById("btnProg"),orig=b.onclick;b.onclick=()=>{orig();document.getElementById("boitec").insertAdjacentHTML("beforeend",`<h3>📘 Progression du CP</h3><p>Quand un exercice redescend au CP, l'ordre des sons suit la progression des cours du CNED (modules 1 à 4), puis les sons de fin d'année. Les mots et les exercices sont propres à l'application.</p>${progCPHtml()}`);};})();
 
 majBoutons();afficherIntro();generer();setOnglet("jour");verifJournee(true);etatSync("appareil");majCompteur();brancherStockage();majBarreVisible();setTimeout(verifRetourJeu,800);if(syncActif()){syncEtat(SYNC.etat||'🔄 Synchronisation…',SYNC.ok);setTimeout(synchroniser,600);}
 </script>
