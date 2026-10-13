@@ -318,6 +318,10 @@ dialog#boite input[type=date]{font:inherit;padding:5px;border:2px solid #C7DADD;
 .jmt{font-size:1.1em}
 .lienjm{font-size:.85em;padding:2px 8px;margin-left:4px}
 .bloc.jmsoir{margin-top:12px}
+
+.chg{font-size:.85em;padding:3px 9px}
+.chopts{display:grid;gap:8px;margin:6px 0 10px}
+.chopts button{text-align:left;line-height:1.3;padding:8px 12px}
 @media (max-width:520px){.barre{position:static}.onglets button{font-size:.68rem}.srow{flex-direction:column;gap:4px}.sjour{width:auto;display:flex;gap:8px;align-items:baseline}.bloc{flex-direction:column;gap:4px}.bloc .heure{flex-direction:row;width:auto;gap:8px;align-items:baseline}.lagon{height:260px}.items.c2{grid-template-columns:1fr}.fiche{padding:16px 12px}.groupe button{font-size:.85rem;padding:8px 6px}}
 @media print{
   .barre,.outils,.panneau,.note.parent,#viewer,#boite,.hors,.exo[hidden],.bilan,.retour,.score,.toast,.fete,.sesbar,.intro,.bact button,.bact .mini,.jopts,.programmer,.guidage,.chemin,.chprog,[hidden]{display:none!important}
@@ -1314,7 +1318,7 @@ const TYPES={complet:"☀️ Journée complète",matin:"🌤 Matin seulement",co
 const maisonT=t=>t!=="off"&&t!=="ecole";
 const HEURES=["07:30","07:45","08:00","08:15","08:30","08:45","09:00","09:15","09:30","10:00","10:30","13:30","14:00","16:30","17:00"];
 let JVAR={},JOUR_VU=null,SEM_VU=null;
-const idee=(cat,w)=>POOL[cat][((w+6)%7+(JVAR[cat]||0))%POOL[cat].length];
+const idee=(cat,w,c)=>{const v=c&&STORE.jours[c]&&STORE.jours[c].var?STORE.jours[c].var[cat]||0:0;return POOL[cat][((w+6)%7+(JVAR[cat]||0)+v)%POOL[cat].length];};
 const jourDe=c=>new Date(c+"T12:00:00");
 function lundiDe(d){const x=new Date(d);x.setHours(12,0,0,0);x.setDate(x.getDate()-(x.getDay()+6)%7);return x;}
 const datesSemaine=lun=>Array.from({length:7},(_,i)=>{const x=new Date(lun);x.setDate(x.getDate()+i);return dateCle(x);});
@@ -1365,7 +1369,7 @@ function apercuPlan(c){
 }
 
 /* Blocs d'une journée selon son type */
-function blocsDuJour(c,plan){
+function blocsDuJour0(c,plan){
   const w=jourDe(c).getDay(),type=typeJour(c);if(!maisonT(type))return [];
   const dur=items=>items?items.reduce((a,x)=>a+x.min,0):REG.dur;
   const fr={id:"fr",d:dur(plan&&plan.fr),ico:"📖",t:"Français · séance guidée",x:"Les exercices s'ouvrent dans l'application, avec le chrono.",seance:"fr",items:plan&&plan.fr};
@@ -1380,19 +1384,20 @@ function blocsDuJour(c,plan){
    {id:"bouge",d:10,ico:"🤸",t:"Pause mouvement",x:"Sauter, danser, boire un verre d'eau.",pause:true},ma,
    {id:"recre",d:20,ico:"🌴",t:"Récréation et collation",x:"Dehors, sans écran. Un fruit, de l'eau.",pause:true},
    {id:"lecture",d:15,ico:"📚",t:"Lecture plaisir",x:"Un vrai livre : elle lit une page, tu lis la suivante. Parlez de l'histoire : « Que va-t-il se passer ? »"}];
-  const e=idee("ecrit",w);b.push({id:"ecrit",d:15,ico:"✏️",t:"Écrire pour de vrai : "+e[0].toLowerCase(),x:e[1]+" Relisez ensemble : majuscule, point, sens.",cat:"ecrit",note:"Ecrire"});
+  const e=idee("ecrit",w,c);b.push({id:"ecrit",d:15,ico:"✏️",t:"Écrire pour de vrai : "+e[0].toLowerCase(),x:e[1]+" Relisez ensemble : majuscule, point, sens.",cat:"ecrit",note:"Ecrire"});
   if(w===3)b.push(blocJeu(c,20));
-  else{const m=idee("monde",w);b.push({id:"monde",d:30,ico:"",t:m[0]+" · découvrir le monde",x:m[1]+" Elle raconte ou dessine ce qu'elle a découvert.",cat:"monde"});}
+  else{const m=idee("monde",w,c);b.push({id:"monde",d:30,ico:"",t:m[0]+" · découvrir le monde",x:m[1]+" Elle raconte ou dessine ce qu'elle a découvert.",cat:"monde"});}
   const apres=type==="complet";
   if(!apres)b.push({id:"bilan",d:10,ico:"⭐",t:"Bilan de la matinée",x:"Elle raconte ce qu'elle a appris et ce qu'elle a aimé. Cochez ensemble ce qui a été fait."});
   b.push({id:"repas",d:90,ico:"🍽️",t:"Repas et temps calme",x:"Temps calme conseillé sans écran : livres, coloriage, jeux calmes.",pause:true,ancre:"12:00"});
   if(apres){
     if(plan&&plan.rev)b.push({id:"revision",d:plan.rev.min,ico:"🔁",t:"Révision · "+NOMK[plan.rev.m][plan.rev.key],x:plan.rev.espace?"Une notion travaillée il y a deux jours : la revoir aide à la retenir.":"Une notion qui a coincé : un seul exercice, court, au niveau adapté.",seance:"revision",items:[plan.rev]});
-    const a=idee("art",w),s=idee("sport",w);
+    const a=idee("art",w,c),s=idee("sport",w,c);
     b.push({id:"art",d:30,ico:"",t:a[0]+" · arts",x:a[1],cat:"art"});
     b.push({id:"sport",d:45,ico:"",t:s[0]+" · sport",x:s[1],cat:"sport"});
     b.push(w===1||w===4?{id:"anglais",d:10,ico:"🗣️",t:"Anglais",x:"Une comptine ou une chanson en anglais ; compter jusqu'à 10, les couleurs."}:{id:"offerte",d:10,ico:"📖",t:"Lecture offerte",x:"Tu lis une histoire à voix haute, juste pour le plaisir."});
-    b.push(blocJeu(c,20));
+    if(w===3){const m=idee("monde",w,c);b.push({id:"monde",d:30,ico:"",t:m[0]+" · découvrir le monde",x:m[1]+" Elle raconte ou dessine ce qu'elle a découvert.",cat:"monde"});}
+    else b.push(blocJeu(c,20));
     b.push({id:"gouter",d:15,ico:"🍌",t:"Goûter",x:"Une vraie pause.",pause:true,ancre:"16:00"});
     b.push({id:"bilan",d:10,ico:"⭐",t:"Bilan de la journée",x:"Elle raconte ce qu'elle a appris et ce qu'elle a aimé. Cochez ensemble ce qui a été fait."});
   }
@@ -1455,8 +1460,9 @@ function renderJournee(){
     if(b.items){let t=b.debut;h+=`<ol class="sous">${b.items.map(it=>{const s=`<li><span class="sh">${hmin(t)}</span> ${it.etape} : <b>${NOMK[it.m][it.key]}</b> <small>(${NOM_NIV[it.lvl]}, ${it.min} min)</small></li>`;t+=it.min;return s;}).join("")}</ol>`;}
     h+=`<div class="bact">`;
     if(b.seance&&estAuj)h+=`<button data-lancer="${b.seance}">▶ Lancer</button>`;
-    if(b.cat&&c>=a)h+=`<button class="o-btn" data-autre="${b.cat}">🔄 Autre idée</button>`;
+    if(b.cat&&c>a)h+=`<button class="o-btn" data-autre="${b.cat}">🔄 Autre idée</button>`;
     if(b.note&&c<=a){const n=j.notes&&j.notes[b.id];h+=`<span class="mini">${ECH.slice(0,4).map(([r,ic,t])=>`<button class="o-btn res" data-noteb="${b.id}" data-r="${r}" title="${t}" aria-pressed="${n===r}">${ic}</button>`).join("")}</span>`;}
+    if(!b.pause&&estAuj&&!j.fait[b.id])h+=`<button class="o-btn chg" data-chg="${b.id}" title="Elle bloque ou s'oppose ? Changer d'activité">🔄 Changer</button>`;
     if(!b.pause&&c<=a)h+=`<label class="coche"><input type="checkbox" data-fait="${b.id}" ${j.fait[b.id]?"checked":""}> Fait</label>`;
     h+=`</div></div></div>`;});
   h+=`</div>${c<=a?`<div class="obs"><label for="jobs"><b>📝 Observations du jour</b> <small>(pour le carnet de bord : sorties, livres lus, travaux réalisés, attitude)</small></label><textarea id="jobs" rows="3" placeholder="Ex. : sortie au marché, compté la monnaie ; a lu seule 2 pages.">${esc(j.obs||"")}</textarea></div>`:""}<p class="note">À l'école, le français prend environ deux fois plus de temps que les maths : c'est pour ça qu'il y a plus de lecture et d'écriture. À la maison, 2 h 30 à 3 h d'activités dans la journée, c'est déjà beaucoup. Pour l'écriture sur papier, note comment ça s'est passé avec ⭐⭐⭐ ⭐⭐ ⭐ ✋ : les prochains exercices d'écriture s'adapteront.</p>`;
@@ -1476,7 +1482,7 @@ function verifJournee(silencieux){
 }
 function lancerBloc(id){
   const plan=STORE.plans[auj()];
-  if(plan){const items=id==="revision"?[plan.rev]:plan[id];lancerPlan(items[0].m,items,id,true,plan.niveau);}
+  if(plan){const bk=journeeDe(auj(),plan).find(x=>x.id===id),items=bk&&bk.items?bk.items:(id==="revision"?[plan.rev]:plan[id]);lancerPlan(items[0].m,items,id,true,plan.niveau);}
   else{matiere=id;majBoutons();seanceDuJour(true);SES.bloc=id;}
   setOnglet("fiches",true);
 }
@@ -1496,7 +1502,7 @@ document.getElementById("journee").addEventListener("click",ev=>{
   if(b.id==="btnGuidage"){const j=jourEtat(c);j.guide=!j.guide;sauver();renderJournee();return;}
   if(b.dataset.retour){JOUR_VU=null;renderJournee();return;}
   if(b.dataset.ong){setOnglet(b.dataset.ong);return;}
-  if(b.dataset.autre){JVAR[b.dataset.autre]=(JVAR[b.dataset.autre]||0)+1;renderJournee();}
+  if(b.dataset.autre){const v=varJour(c);v[b.dataset.autre]=(v[b.dataset.autre]||0)+1;sauver();renderJournee();}
   if(b.dataset.lancer)lancerBloc(b.dataset.lancer);
   if(b.dataset.noteb){const j=jourEtat(c);j.notes=j.notes||{};const premiere=!j.notes[b.dataset.noteb];j.notes[b.dataset.noteb]=b.dataset.r;j.fait[b.dataset.noteb]=true;journaliser(c,b.dataset.noteb,true);
     const k="Ecrire";noter("fr",k,niveauDepart(k,niveau,"fr").lvl,b.dataset.r);renderJournee();
@@ -2153,7 +2159,7 @@ function premierJour(){const ts=[...SUIVI.seances.map(s=>s.t),...Object.values(S
 function htmlCarnet(deb,fin){
   const p=prenomActif(),dates=joursPeriode(deb,fin);
   const bilansDu=c=>{const l=[];for(const [id,h] of Object.entries(SUIVI.res)){const [m,k]=id.split(":");h.forEach(x=>{if(dateCle(new Date(x.t))===c)l.push({...x,m,k});});}return l.sort((a,b)=>a.t-b.t);};
-  const jours=dates.map(c=>({c,log:logDuJour(c),ses:seancesDu(c),bil:bilansDu(c),flu:SUIVI.flu.filter(x=>dateCle(new Date(x.t))===c),jx:(SUIVI.jeux||[]).filter(x=>x.r&&dateCle(new Date(x.t))===c),obs:(STORE.jours[c]&&STORE.jours[c].obs)||""})).filter(j=>j.log.length||j.ses.length||j.bil.length||j.obs);
+  const jours=dates.map(c=>({c,log:logDuJour(c),ses:seancesDu(c),bil:bilansDu(c),flu:SUIVI.flu.filter(x=>dateCle(new Date(x.t))===c),jx:(SUIVI.jeux||[]).filter(x=>x.r&&dateCle(new Date(x.t))===c),obs:(STORE.jours[c]&&STORE.jours[c].obs)||"",chg:(STORE.jours[c]&&STORE.jours[c].chg)||[]})).filter(j=>j.log.length||j.ses.length||j.bil.length||j.obs||j.chg.length);
   const parDom={};let total=0;
   jours.forEach(j=>{const vus=new Set();j.log.forEach(e=>{parDom[e.dom]=(parDom[e.dom]||0)+e.d;total+=e.d;vus.add(e.id);});
     if(!vus.has("fr")&&!vus.has("maths"))j.ses.forEach(s=>{parDom[s.m]=(parDom[s.m]||0)+s.min;total+=s.min;});});
@@ -2173,6 +2179,7 @@ function htmlCarnet(deb,fin){
    <li><b>Programmation</b> : chaque semaine, les notions sont réparties sur les jours d'instruction, en priorité celles qui posent difficulté, puis dans l'ordre du programme. Chaque notion revient en révision deux jours plus tard (révision espacée).</li>
    <li><b>Différenciation</b> : quand une notion n'est pas maîtrisée, l'exercice redescend d'un niveau (jusqu'aux attendus du CP, où l'ordre d'étude des sons suit la progression des cours du CNED) ; il remonte après une réussite autonome.</li>
    <li><b>Manipulation et jeu</b> : objets (coquillages, dés, pièces), jeux de société de la famille et jeux éducatifs en ligne (logicieleducatif.fr) pour consolider les notions. Le jeu de société de la journée est choisi selon les notions à retravailler ; pendant la partie, l'enfant explique ses coups, compte et décrit à voix haute.</li>
+   <li><b>Gestion des blocages</b> : quand l'enfant s'oppose ou bloque, l'activité n'est pas imposée. Elle est remplacée (autre notion choisie par l'enfant, même notion en plus facile ou sous forme de jeu, version courte, report dans la journée) ; chaque adaptation est notée dans le journal ci-dessous.</li>
    <li><b>Évaluation</b> : après chaque exercice, y compris sur papier, le parent note le degré d'autonomie : ${ECH.map(([r,ic,t])=>`${ic} ${t.toLowerCase()}`).join(", ")}. Une notion est considérée acquise quand elle est réussie seule à son niveau. La fluence de lecture est mesurée en mots lus par minute.</li></ul>`;
 
   h+=`<h3>Jeux de société utilisés et intérêt pédagogique</h3>${tableJeuxHtml(parties)}<p class="impnote">Parties : nombre de parties notées sur la période.</p>`;
@@ -2195,6 +2202,7 @@ function htmlCarnet(deb,fin){
     if(j.bil.length)h+=`<tr><td class="nw">Bilans</td><td>${j.bil.map(x=>`${NOMK[x.m]&&NOMK[x.m][x.k]||x.k} : ${x.src==="jeu"?"🎮 ":""}${emo(x.r)} ${LIBC[norm(x.r)]} <small>(${NOM_NIV[x.lvl]})</small>`).join(" · ")}</td></tr>`;
     if(j.jx.length)h+=`<tr><td class="nw">Jeux en ligne</td><td>${j.jx.map(x=>esc(x.titre)).join(" · ")}</td></tr>`;
     if(j.flu.length)h+=`<tr><td class="nw">Lecture</td><td>${j.flu.map(x=>x.score+" mots lus en une minute").join(" · ")}</td></tr>`;
+    if(j.chg.length)h+=`<tr><td class="nw">Adaptations</td><td>${j.chg.map(x=>`${esc(x.de)} → ${esc(x.vers)}`).join(" · ")}</td></tr>`;
     if(j.obs)h+=`<tr><td class="nw">Observations</td><td>${esc(j.obs).replace(/\n/g,"<br>")}</td></tr>`;
     h+=`</tbody></table></section>`;});
 
@@ -2406,6 +2414,81 @@ M.Calcul[0]=()=>{const c=uniq(2,()=>R(1,9)),d=R(2,10),mo=R(1,10)*2,p=R(11,49),z=
 
 function progCPHtml(){return `<table class="couv">${CP_PROG.map(p=>`<tr><td><b>${p.per}</b><br>Sons : ${p.sons.join(", ")}<br><small>Mots-outils : ${p.motsOutils.join(", ")}</small></td></tr>`).join("")}</table>`;}
 (()=>{const b=document.getElementById("btnProg"),orig=b.onclick;b.onclick=()=>{orig();document.getElementById("boitec").insertAdjacentHTML("beforeend",`<h3>📘 Progression du CP</h3><p>Quand un exercice redescend au CP, l'ordre des sons suit la progression des cours du CNED (modules 1 à 4), puis les sons de fin d'année. Les mots et les exercices sont propres à l'application.</p>${progCPHtml()}`);};})();
+
+/* ================= CHANGER D'ACTIVITÉ (opposition, blocage) ================= */
+const varJour=c=>{const j=jourEtat(c);return j.var||(j.var={});};
+function noterChangement(c,id,de,vers){const j=jourEtat(c);(j.chg||(j.chg=[])).push({t:Date.now(),id,de:String(de).replace(/<[^>]+>/g,""),vers:String(vers).replace(/<[^>]+>/g,"")});}
+const htmlEnLigne=s=>String(s).replace(/<\/?div[^>]*>/g,"").replace(/<p[^>]*>/g,"").replace(/<\/p>/g,"<br>");
+
+/* Les changements de la journée s'appliquent par-dessus le programme */
+function blocsDuJour(c,plan){
+  const bl=blocsDuJour0(c,plan),j=STORE.jours[c];if(!j||!bl.length)return bl;
+  const out=bl.map(b=>{let x=b;
+    const s=j.subst&&j.subst[b.id];
+    if(s){x={...x,t:s.t,x:s.x,ico:s.ico||x.ico,dom:s.dom||domaineBloc(x)};delete x.seance;delete x.items;delete x.cat;delete x.note;}
+    if(j.court&&j.court[b.id]){
+      if(x.items&&x.items.length>1){const it=x.items.find(i=>i.etape==="Notion du jour")||x.items[0];x={...x,items:[{...it,min:Math.max(4,Math.round(it.min*.7))}]};x.d=x.items[0].min;}
+      else x={...x,d:Math.max(5,Math.round(x.d/2))};
+      x.t+=" (version courte)";}
+    return x;});
+  (j.ordre||[]).forEach(id=>{const i=out.findIndex(b=>b.id===id);if(i<0)return;const k=prochaineAct(out,i);if(k>0){const t=out[i];out[i]=out[k];out[k]=t;}});
+  return out;
+}
+function prochaineAct(l,i){for(let k=i+1;k<l.length;k++){if(l[k].ancre)return -1;if(!l[k].pause)return k;}return -1;}
+
+function ouvrirChanger(id){
+  const c=auj(),j=jourEtat(c),bl=journeeDe(c,STORE.plans[c]||apercuPlan(c)),b=bl.find(x=>x.id===id);if(!b)return;
+  const w=jourDe(c).getDay();let opts="";
+  if(b.seance){
+    const plan=STORE.plans[c]||apercuPlan(c),items=b.id==="revision"?[plan.rev]:plan[b.id],cur=items.find(x=>x.etape==="Notion du jour")||items[0],m=cur.m;
+    const autres=ordreNotions(m,new Set(items.map(x=>m+":"+x.key))).slice(0,3);
+    opts+=`<h3>Elle choisit une autre notion</h3><p class="semact">${autres.map(k=>`<button class="o-btn" data-chn="${m}|${k}">${NOMK[m][k]} <small>(${NOM_NIV[niveauDepart(k,plan.niveau,m).lvl]})</small></button>`).join("")}</p>`;
+    const bas=plusBas(cur.key,cur.lvl,m);
+    opts+=`<h3>Ou on garde « ${NOMK[m][cur.key]} » autrement</h3><p class="semact">${bas!==null?`<button class="o-btn" data-chf="1">🪜 Plus facile <small>(${NOM_NIV[bas]})</small></button>`:""}${JEUX[m][cur.key]?`<button class="o-btn" data-chj="${m}|${cur.key}|${cur.lvl}">🎲 En jeu, avec des objets</button>`:""}</p>`;
+  }else if(b.cat==="jm"){
+    const g=jeuPourJour(c),l=jmTries().filter(x=>x.id!==g.id).slice(0,3);
+    opts+=`<h3>Elle choisit un autre jeu</h3><p class="semact">${l.map(x=>`<button class="o-btn" data-chjm="${x.id}">${x.ico} ${x.nom}</button>`).join("")}</p>`;
+  }else if(b.cat&&POOL[b.cat]){
+    const P=POOL[b.cat],cur=P.findIndex(x=>b.t.toLowerCase().includes(x[0].toLowerCase()));
+    const l=[1,2,3].map(k=>[k,P[((cur<0?0:cur)+k)%P.length]]);
+    opts+=`<h3>Elle choisit autre chose</h3><div class="chopts">${l.map(([k,x])=>`<button class="o-btn" data-chv="${b.cat}|${k}"><b>${x[0]}</b><br><small>${x[1]}</small></button>`).join("")}</div>`;
+  }else{
+    const ALT={lecture:[["📖","Lecture offerte","Tu lis une histoire, elle écoute ; puis elle lit seulement la dernière phrase."],["🧸","Lire à une peluche","Elle lit une page à son doudou ou à sa peluche, sans toi à côté."],["📚","Livre au choix","Elle choisit ce qu'elle veut : BD, documentaire, magazine, même un livre déjà connu."]],
+      rituel:[["🤸","Rituel en bougeant","Compter en sautant, dire la date en tapant dans les mains."],["🗣️","Rituel à l'oral","Elle te dicte la date et la météo : c'est toi qui écris."]],
+      anglais:[["🎵","Chanson en anglais","Une comptine en anglais à écouter et à mimer."],["🎨","Colors","Montrer des objets de la maison et dire leur couleur en anglais."]],
+      offerte:[["🎧","Histoire à écouter","Une histoire audio, allongée, sans écran."]],
+      bilan:[["🎨","Bilan en dessin","Elle dessine ce qu'elle a préféré aujourd'hui et te le raconte."]],
+      cuisine:[["🧺","Ranger les courses","Compter, trier, lire les étiquettes : même intérêt que la cuisine."]]}[b.id]||[];
+    if(ALT.length)opts+=`<h3>Elle choisit autre chose</h3><div class="chopts">${ALT.map(([ico,t,x],i)=>`<button class="o-btn" data-chs="${i}"><b>${ico} ${t}</b><br><small>${x}</small></button>`).join("")}</div>`;
+    window.__chALT=ALT;
+  }
+  const k=prochaineAct(bl,bl.indexOf(b));
+  opts+=`<h3>Ou on allège</h3><p class="semact">${j.court&&j.court[id]?"":`<button class="o-btn" data-chc="1">✂️ Version courte</button>`}${k>0?`<button class="o-btn" data-chp="1">⏭ Plus tard (après « ${bl[k].t.replace(/<[^>]+>/g,"")} »)</button>`:""}</p>`;
+  ouvrirDialog(`🔄 Changer : ${b.ico?b.ico+" ":""}${b.t}`,`<p>Elle s'oppose ou elle bloque ? Ne force pas : change d'activité. <b>La laisser choisir</b> entre deux propositions lui redonne la main et désamorce souvent le conflit.</p>${opts}
+   <details class="nrepli"><summary><b>👤 Si elle s'oppose souvent</b></summary><ul>
+    <li>Pas de bras de fer : on change, on ne négocie pas pendant 10 minutes.</li>
+    <li>Choix fermé : « Tu préfères les dés ou les coquillages ? », « Tu commences par les maths ou par la lecture ? »</li>
+    <li>Réduire la tâche : « On fait juste 3 calculs, et après tu choisis. »</li>
+    <li>Faire à deux : tu écris, elle dicte ; ou c'est elle qui corrige tes « erreurs ».</li>
+    <li>Bouger 2 minutes ou boire un verre d'eau, puis reprendre.</li>
+    <li>Si c'est toujours sur la même notion, elle est peut-être trop difficile : note ✋ et l'application baissera le niveau.</li></ul></details>
+   <p class="mat">Chaque changement est noté dans le carnet de bord (adaptations de la journée).</p>`);
+  const fin=(vers,msg)=>{noterChangement(c,id,b.t,vers);sauver();document.getElementById("boite").close();renderJournee();toast(msg||"🔄 C'est changé. Bravo à elle d'avoir choisi !");};
+  document.getElementById("boitec").onclick=ev=>{const x=ev.target.closest("button");if(!x)return;
+    if(x.dataset.chn||x.dataset.chf){if(!STORE.plans[c]){programmerJournee();}
+      const plan=STORE.plans[c],arr=id==="revision"?null:plan[id],cur=arr?arr.find(i=>i.etape==="Notion du jour")||arr[0]:plan.rev,m=cur.m;
+      if(x.dataset.chn){const k=x.dataset.chn.split("|")[1],ancien=NOMK[m][cur.key];cur.key=k;cur.lvl=niveauDepart(k,plan.niveau,m).lvl;delete cur.espace;fin(`${NOMK[m][k]} (autre notion, à la place de ${ancien})`);}
+      else{const bas=plusBas(cur.key,cur.lvl,m);if(bas!==null)cur.lvl=bas;fin(`${NOMK[m][cur.key]} en plus facile (${NOM_NIV[cur.lvl]})`,"🪜 Même notion, en plus facile. Une réussite vaut mieux qu'un blocage.");}
+      return;}
+    if(x.dataset.chj){const [m,k,l]=x.dataset.chj.split("|");(j.subst||(j.subst={}))[id]={t:`${NOMK[m][k]} en jeu, avec des objets`,x:htmlEnLigne(JEUX[m][k](+l)),ico:"🎲",dom:m};fin(`${NOMK[m][k]} en jeu avec des objets`,"🎲 On joue ! Après le jeu, note comment ça s'est passé avec la case « Fait ».");return;}
+    if(x.dataset.chjm){j.jm=x.dataset.chjm;fin(jmParId(j.jm).nom);return;}
+    if(x.dataset.chv){const [cat,k]=x.dataset.chv.split("|"),v=varJour(c),P=POOL[cat],cur=P.findIndex(y=>b.t.toLowerCase().includes(y[0].toLowerCase()));v[cat]=(v[cat]||0)+ +k;fin(P[((cur<0?0:cur)+ +k)%P.length][0]);return;}
+    if(x.dataset.chs!==undefined){const [ico,t,xx]=window.__chALT[+x.dataset.chs];(j.subst||(j.subst={}))[id]={t,x:xx,ico};fin(t);return;}
+    if(x.dataset.chc){(j.court||(j.court={}))[id]=1;fin("version courte","✂️ Version courte : l'important, c'est de finir sur une réussite.");return;}
+    if(x.dataset.chp){(j.ordre||(j.ordre=[])).push(id);fin("reportée un peu plus tard","⏭ On le fera un peu plus tard. Commence par l'activité suivante.");return;}
+  };
+}
+document.addEventListener("click",ev=>{const b=ev.target.closest("#journee [data-chg]");if(!b)return;ev.stopPropagation();ouvrirChanger(b.dataset.chg);},true);
 
 majBoutons();afficherIntro();generer();setOnglet("jour");verifJournee(true);etatSync("appareil");majCompteur();brancherStockage();majBarreVisible();setTimeout(verifRetourJeu,800);if(syncActif()){syncEtat(SYNC.etat||'🔄 Synchronisation…',SYNC.ok);setTimeout(synchroniser,600);}
 </script>
