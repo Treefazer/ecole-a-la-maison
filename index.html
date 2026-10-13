@@ -322,6 +322,16 @@ dialog#boite input[type=date]{font:inherit;padding:5px;border:2px solid #C7DADD;
 .chg{font-size:.85em;padding:3px 9px}
 .chopts{display:grid;gap:8px;margin:6px 0 10px}
 .chopts button{text-align:left;line-height:1.3;padding:8px 12px}
+
+.bloc[data-dep]{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.dnd-clone{position:fixed;z-index:60;pointer-events:none;opacity:.95;box-shadow:0 10px 28px rgba(6,47,61,.35);transform:rotate(-1deg) scale(1.02);background:#fff;border-radius:12px;margin:0}
+.dnd-source{opacity:.3}
+.dnd-ligne{border:3px dashed var(--corail);border-radius:10px;padding:6px 10px;margin:4px 0;color:var(--corail);font-weight:bold;font-size:.9em;text-align:center;background:#FFF4F1}
+body.dnd-on{overscroll-behavior:none}
+.astuce{margin:.2em 0 .6em}
+.astuce .o-btn{font-size:.85em;padding:2px 8px;margin-left:6px}
+.dnd-clone .corps p,.dnd-clone ol,.dnd-clone .bact,.dnd-clone .maint{display:none}
+.dnd-clone{padding:8px 12px}
 @media (max-width:520px){.barre{position:static}.onglets button{font-size:.68rem}.srow{flex-direction:column;gap:4px}.sjour{width:auto;display:flex;gap:8px;align-items:baseline}.bloc{flex-direction:column;gap:4px}.bloc .heure{flex-direction:row;width:auto;gap:8px;align-items:baseline}.lagon{height:260px}.items.c2{grid-template-columns:1fr}.fiche{padding:16px 12px}.groupe button{font-size:.85rem;padding:8px 6px}}
 @media print{
   .barre,.outils,.panneau,.note.parent,#viewer,#boite,.hors,.exo[hidden],.bilan,.retour,.score,.toast,.fete,.sesbar,.intro,.bact button,.bact .mini,.jopts,.programmer,.guidage,.chemin,.chprog,[hidden]{display:none!important}
@@ -1454,9 +1464,11 @@ function renderJournee(){
   }
   const blocs=journeeDe(c,plan||apercuPlan(c)),now=new Date().getHours()*60+new Date().getMinutes();
   const act=blocs.filter(b=>!b.pause),nf=act.filter(b=>j.fait[b.id]).length;
+  if(c>=a){const jj=STORE.jours[c],perso=jj&&(jj.ordreM||(jj.ordre&&jj.ordre.length)),hab=REG.ordreType&&REG.ordreType[type];
+    h+=`<p class="mat astuce">↕️ <b>Appui long</b> sur une activité, puis glisse-la pour la déplacer (par exemple le français l'après-midi).${perso?` <button class="o-btn" data-ordrereset="jour">↩ Ordre de départ</button>`:hab?` <button class="o-btn" data-ordrereset="type">↩ Oublier l'ordre habituel</button>`:""}</p>`;}
   h+=`<p class="jprog"><b>${nf} / ${act.length}</b> activités faites <span class="sprog"><i style="width:${act.length?nf/act.length*100:0}%"></i></span></p><div class="jour">`;
   blocs.forEach(b=>{const maint=estAuj&&now>=b.debut&&now<b.debut+b.d;
-    h+=`<div class="bloc ${j.fait[b.id]?"fait":""} ${b.pause?"pause":""} ${maint?"maintenant":""}" data-bloc="${b.id}"><div class="heure">${hmin(b.debut)}<small>${b.d} min</small>${maint?'<span class="maint">maintenant</span>':""}</div><div class="corps"><b>${b.ico} ${b.t}</b><p>${b.x}</p>`;
+    h+=`<div class="bloc ${j.fait[b.id]?"fait":""} ${b.pause?"pause":""} ${maint?"maintenant":""}" data-bloc="${b.id}"${c>=a&&!b.ancre&&!/^(libre|cuisine)/.test(b.id)?' data-dep="1"':""}><div class="heure">${hmin(b.debut)}<small>${b.d} min</small>${maint?'<span class="maint">maintenant</span>':""}</div><div class="corps"><b>${b.ico} ${b.t}</b><p>${b.x}</p>`;
     if(b.items){let t=b.debut;h+=`<ol class="sous">${b.items.map(it=>{const s=`<li><span class="sh">${hmin(t)}</span> ${it.etape} : <b>${NOMK[it.m][it.key]}</b> <small>(${NOM_NIV[it.lvl]}, ${it.min} min)</small></li>`;t+=it.min;return s;}).join("")}</ol>`;}
     h+=`<div class="bact">`;
     if(b.seance&&estAuj)h+=`<button data-lancer="${b.seance}">▶ Lancer</button>`;
@@ -1561,7 +1573,7 @@ document.getElementById("semainev").addEventListener("click",ev=>{
   if(b.id==="btnSemType"){dates.forEach(c=>{REG.semType[jourDe(c).getDay()]=[typeJour(c),debutJour(c)];});sauver();renderSemaine();toast("⭐ Semaine type enregistrée : elle servira pour les semaines suivantes.");return;}
   if(b.id==="btnSemReset"){dates.forEach(c=>{if(c>=auj())delete STORE.ov[c];});if(STORE.sem[dateCle(lun)])programmerSemaine(lun);sauver();renderSemaine();toast("↩ Les jours à venir reprennent la semaine type.");return;}
 });
-setInterval(()=>{if(document.hidden)return;verifJournee(false);if(onglet==="jour")renderJournee();},30000);
+setInterval(()=>{if(document.hidden)return;verifJournee(false);if(onglet==="jour"&&!window.DND_ACTIF)renderJournee();},30000);
 
 
 /* ================= ONGLETS ================= */
@@ -2422,8 +2434,8 @@ const htmlEnLigne=s=>String(s).replace(/<\/?div[^>]*>/g,"").replace(/<p[^>]*>/g,
 
 /* Les changements de la journée s'appliquent par-dessus le programme */
 function blocsDuJour(c,plan){
-  const bl=blocsDuJour0(c,plan),j=STORE.jours[c];if(!j||!bl.length)return bl;
-  const out=bl.map(b=>{let x=b;
+  const bl=blocsDuJour0(c,plan),j=STORE.jours[c]||{};if(!bl.length)return bl;
+  let out=bl.map(b=>{let x=b;
     const s=j.subst&&j.subst[b.id];
     if(s){x={...x,t:s.t,x:s.x,ico:s.ico||x.ico,dom:s.dom||domaineBloc(x)};delete x.seance;delete x.items;delete x.cat;delete x.note;}
     if(j.court&&j.court[b.id]){
@@ -2431,6 +2443,7 @@ function blocsDuJour(c,plan){
       else x={...x,d:Math.max(5,Math.round(x.d/2))};
       x.t+=" (version courte)";}
     return x;});
+  out=appliquerOrdre(out,j.ordreM||(REG.ordreType&&REG.ordreType[typeJour(c)]));
   (j.ordre||[]).forEach(id=>{const i=out.findIndex(b=>b.id===id);if(i<0)return;const k=prochaineAct(out,i);if(k>0){const t=out[i];out[i]=out[k];out[k]=t;}});
   return out;
 }
@@ -2489,6 +2502,75 @@ function ouvrirChanger(id){
   };
 }
 document.addEventListener("click",ev=>{const b=ev.target.closest("#journee [data-chg]");if(!b)return;ev.stopPropagation();ouvrirChanger(b.dataset.chg);},true);
+
+/* ================= DÉPLACER LES ACTIVITÉS : APPUI LONG PUIS GLISSER ================= */
+function appliquerOrdre(out,ord){
+  if(!ord||!ord.length)return out;
+  const pos=new Map(ord.map((id,i)=>[id,i]));let last=-1;
+  return out.map((b,i)=>{let k;if(pos.has(b.id)){k=pos.get(b.id);last=k;}else k=last+.5+i*1e-3;return {b,k};}).sort((x,y)=>x.k-y.k).map(x=>x.b);
+}
+let DP=null,DND=null,DND_TOUCH=0;
+const jz=document.getElementById("journee");
+function dndPreparer(cible,x,y){
+  if(cible.closest("button,input,label,select,textarea,a,summary"))return;
+  const el=cible.closest(".bloc[data-dep]");if(!el)return;
+  dndAnnulerPrep();DP={el,x,y,t:setTimeout(()=>dndCommencer(),450)};
+}
+function dndAnnulerPrep(){if(DP){clearTimeout(DP.t);DP=null;}}
+function dndCommencer(){
+  const el=DP.el,r=el.getBoundingClientRect();
+  try{navigator.vibrate&&navigator.vibrate(30);}catch(e){}
+  const clone=el.cloneNode(true);clone.classList.add("dnd-clone");clone.removeAttribute("data-bloc");
+  Object.assign(clone.style,{width:r.width+"px",left:r.left+"px",top:r.top+"px"});document.body.appendChild(clone);
+  const ligne=document.createElement("div");ligne.className="dnd-ligne";
+  el.classList.add("dnd-source");el.parentNode.insertBefore(ligne,el);
+  DND={el,id:el.dataset.bloc,clone,ligne,dy:-18,x:DP.x,y:DP.y,avant:[...jz.querySelectorAll(".jour .bloc[data-bloc]")].map(e=>e.dataset.bloc)};
+  window.DND_ACTIF=true;DP=null;document.body.classList.add("dnd-on");
+  dndPlacer();DND.raf=requestAnimationFrame(dndDefil);
+}
+function dndPlacer(){
+  const {y,clone,ligne,el}=DND;clone.style.top=(y-DND.dy)+"px";
+  const L=[...jz.querySelectorAll(".jour .bloc[data-bloc]")].filter(e=>e!==el);
+  const apres=L.find(e=>{const r=e.getBoundingClientRect();return y<r.top+r.height/2;});
+  if(apres){if(ligne.nextSibling!==apres)apres.parentNode.insertBefore(ligne,apres);}
+  else if(L.length){const d=L[L.length-1];if(d.nextSibling!==ligne)d.parentNode.insertBefore(ligne,d.nextSibling);}
+  const h=apres?apres.querySelector(".heure").childNodes[0].textContent.trim():"";
+  ligne.textContent=h?`Déposer ici · vers ${h}`:"Déposer ici · en fin de journée";
+}
+function dndDefil(){if(!DND)return;const m=70,v=DND.y<m?-14:DND.y>innerHeight-m?14:0;if(v){window.scrollBy(0,v);dndPlacer();}DND.raf=requestAnimationFrame(dndDefil);}
+function dndFin(deposer){
+  if(!DND)return;const d=DND;DND=null;window.DND_ACTIF=false;cancelAnimationFrame(d.raf);document.body.classList.remove("dnd-on");
+  d.clone.remove();d.el.classList.remove("dnd-source");
+  if(!deposer){d.ligne.remove();return;}
+  d.ligne.parentNode.insertBefore(d.el,d.ligne);d.ligne.remove();
+  const c=JOUR_VU||auj(),base=journeeDe(c,STORE.plans[c]||apercuPlan(c));
+  const ids=new Set(blocsDuJour(c,STORE.plans[c]||apercuPlan(c)).map(b=>b.id));
+  const ordre=[...jz.querySelectorAll(".jour .bloc[data-bloc]")].map(e=>e.dataset.bloc).filter(id=>ids.has(id));
+  const avant=d.avant.filter(id=>ids.has(id));
+  if(ordre.join()===avant.join()){renderJournee();return;}
+  const j=jourEtat(c),ancien=j.ordreM,ancienOrdre=j.ordre;j.ordreM=ordre;delete j.ordre;
+  const nb=journeeDe(c,STORE.plans[c]||apercuPlan(c)).find(b=>b.id===d.id),titre=(nb.ico?nb.ico+" ":"")+nb.t.replace(/<[^>]+>/g,"");
+  noterChangement(c,d.id,titre,`déplacée à ${hmin(nb.debut)}`);sauver();renderJournee();
+  const type=typeJour(c);
+  toast(`↕️ <b>${titre}</b> est maintenant à <b>${hmin(nb.debut)}</b>. Les horaires de la journée sont recalculés.`,[
+    ["⭐ Garder cet ordre les autres jours",()=>{REG.ordreType=REG.ordreType||{};REG.ordreType[type]=ordre.slice();sauver();renderJournee();toast(`⭐ Cet ordre servira pour les journées « ${TYPES[type].replace(/^\S+\s/,"")} ». Tu peux toujours déplacer une activité au cas par cas.`);}],
+    ["↩ Annuler",()=>{if(ancien)j.ordreM=ancien;else delete j.ordreM;if(ancienOrdre)j.ordre=ancienOrdre;if(j.chg)j.chg.pop();sauver();renderJournee();}]]);
+}
+jz.addEventListener("touchstart",ev=>{DND_TOUCH=Date.now();if(ev.touches.length!==1){dndAnnulerPrep();return;}const t=ev.touches[0];dndPreparer(ev.target,t.clientX,t.clientY);},{passive:true});
+jz.addEventListener("touchmove",ev=>{const t=ev.touches[0];
+  if(DND){ev.preventDefault();DND.x=t.clientX;DND.y=t.clientY;dndPlacer();return;}
+  if(DP&&Math.hypot(t.clientX-DP.x,t.clientY-DP.y)>10)dndAnnulerPrep();},{passive:false});
+jz.addEventListener("touchend",ev=>{DND_TOUCH=Date.now();if(DND){ev.preventDefault();dndFin(true);}dndAnnulerPrep();});
+jz.addEventListener("touchcancel",()=>{dndAnnulerPrep();dndFin(false);});
+jz.addEventListener("contextmenu",ev=>{if(DP||DND||ev.target.closest(".bloc[data-dep]"))ev.preventDefault();});
+jz.addEventListener("mousedown",ev=>{if(ev.button!==0||Date.now()-DND_TOUCH<800)return;dndPreparer(ev.target,ev.clientX,ev.clientY);});
+window.addEventListener("mousemove",ev=>{if(DND){ev.preventDefault();DND.x=ev.clientX;DND.y=ev.clientY;dndPlacer();return;}if(DP&&Math.hypot(ev.clientX-DP.x,ev.clientY-DP.y)>6)dndAnnulerPrep();});
+window.addEventListener("mouseup",()=>{if(DND)dndFin(true);dndAnnulerPrep();});
+window.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&DND)dndFin(false);});
+document.addEventListener("click",ev=>{const b=ev.target.closest("#journee [data-ordrereset]");if(!b)return;ev.stopPropagation();const c=JOUR_VU||auj(),j=jourEtat(c);
+  if(b.dataset.ordrereset==="jour"){delete j.ordreM;delete j.ordre;toast("↩ La journée reprend son ordre de départ.");}
+  else{const t=typeJour(c);if(REG.ordreType)delete REG.ordreType[t];toast("↩ Les journées reprennent l'ordre de base.");}
+  sauver();renderJournee();},true);
 
 majBoutons();afficherIntro();generer();setOnglet("jour");verifJournee(true);etatSync("appareil");majCompteur();brancherStockage();majBarreVisible();setTimeout(verifRetourJeu,800);if(syncActif()){syncEtat(SYNC.etat||'🔄 Synchronisation…',SYNC.ok);setTimeout(synchroniser,600);}
 </script>
